@@ -36,9 +36,9 @@ $shadow-size: 2px;
 
   .nickname {
     border: none;
-    background: transparent;
+    background: rgba(black, 0.3);
     flex: 1;
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     padding: 2px 4px 2px 4px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -46,7 +46,7 @@ $shadow-size: 2px;
     color: white;
     text-shadow: 0 0px 2px black;
     text-align: center;
-    margin-left: 1.75rem;
+    // margin-left: 1.75rem;
 
   }
   input.nickname:hover,

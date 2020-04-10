@@ -90,6 +90,9 @@ export default class Video extends React.PureComponent<VideoProps> {
             <li className='action-toggle-fit' onClick={this.handleToggleCover}>
               Toggle Fit
             </li>
+            <li onClick={() => this.videoRef.current!.muted = !this.videoRef.current!.muted}>
+              Mute Person
+            </li>
           </Dropdown>
         </div>
       </div>
