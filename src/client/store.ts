@@ -1,19 +1,11 @@
-import {
-  Action,
-  applyMiddleware,
-  createStore as _createStore,
-  Store as ReduxStore,
-} from "redux";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { create } from "./middlewares";
-import reducers from "./reducers";
+import { Action, applyMiddleware, createStore as _createStore, Store as ReduxStore } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { create } from './middlewares';
+import reducers from './reducers';
 
-export const middlewares = create(
-  window.localStorage && window.localStorage.log
-);
+export const middlewares = create(window.localStorage && window.localStorage.log);
 
-export const createStore = () =>
-  _createStore(reducers, applyMiddleware(...middlewares));
+export const createStore = () => _createStore(reducers, applyMiddleware(...middlewares));
 
 export default createStore();
 

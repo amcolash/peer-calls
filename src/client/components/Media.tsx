@@ -1,5 +1,5 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 import {
   AudioConstraint,
   MediaDevice,
@@ -9,14 +9,14 @@ import {
   getMediaStream,
   enumerateDevices,
   play,
-} from "../actions/MediaActions";
-import { MediaState } from "../reducers/media";
-import { State } from "../store";
-import { Alerts, Alert } from "./Alerts";
-import { info, warning, error } from "../actions/NotifyActions";
-import { ME, DialState, DIAL_STATE_HUNG_UP } from "../constants";
-import { dial } from "../actions/CallActions";
-import { setNickname } from "../actions/NicknameActions";
+} from '../actions/MediaActions';
+import { MediaState } from '../reducers/media';
+import { State } from '../store';
+import { Alerts, Alert } from './Alerts';
+import { info, warning, error } from '../actions/NotifyActions';
+import { ME, DialState, DIAL_STATE_HUNG_UP } from '../constants';
+import { dial } from '../actions/CallActions';
+import { setNickname } from '../actions/NicknameActions';
 
 export type MediaProps = MediaState & {
   dial: typeof dial;
@@ -68,14 +68,14 @@ export class MediaForm extends React.PureComponent<MediaProps> {
     try {
       await props.getMediaStream({ audio, video });
     } catch (err) {
-      props.logError("Error getting media stream: {0}", err);
+      props.logError('Error getting media stream: {0}', err);
     }
 
-    props.logInfo("Dialling...");
+    props.logInfo('Dialling...');
     try {
       await props.dial();
     } catch (err) {
-      props.logError("Error dialling: {0}", err);
+      props.logError('Error dialling: {0}', err);
     }
   };
   handleVideoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -105,32 +105,13 @@ export class MediaForm extends React.PureComponent<MediaProps> {
 
     return (
       <form className="media" onSubmit={this.handleSubmit}>
-        <input
-          required
-          name="nickname"
-          type="text"
-          placeholder="Nickname"
-          onChange={this.handleNicknameChange}
-          value={props.nickname}
-        />
+        <input required name="nickname" type="text" placeholder="Nickname" onChange={this.handleNicknameChange} value={props.nickname} />
 
-        <select
-          name="video-input"
-          onChange={this.handleVideoChange}
-          value={videoId}
-        >
-          <Options
-            devices={props.devices}
-            default='{"facingMode":"user"}'
-            type="videoinput"
-          />
+        <select name="video-input" onChange={this.handleVideoChange} value={videoId}>
+          <Options devices={props.devices} default='{"facingMode":"user"}' type="videoinput" />
         </select>
 
-        <select
-          name="audio-input"
-          onChange={this.handleAudioChange}
-          value={audioId}
-        >
+        <select name="audio-input" onChange={this.handleAudioChange} value={audioId}>
           <Options devices={props.devices} default="true" type="audioinput" />
         </select>
 
@@ -144,13 +125,10 @@ export interface AutoplayProps {
   play: () => void;
 }
 
-export const AutoplayMessage = React.memo(function Autoplay(
-  props: AutoplayProps
-) {
+export const AutoplayMessage = React.memo(function Autoplay(props: AutoplayProps) {
   return (
     <React.Fragment>
-      Your browser has blocked video autoplay on this page. To continue with
-      your call, please press the play button: &nbsp;
+      Your browser has blocked video autoplay on this page. To continue with your call, please press the play button: &nbsp;
       <button className="button" onClick={props.play}>
         Play
       </button>
@@ -178,13 +156,13 @@ export const Media = c(
 
 interface OptionsProps {
   devices: MediaDevice[];
-  type: "audioinput" | "videoinput";
+  type: 'audioinput' | 'videoinput';
   default: string;
 }
 
 const labels = {
-  audioinput: "Audio",
-  videoinput: "Video",
+  audioinput: 'Audio',
+  videoinput: 'Video',
 };
 
 function Options(props: OptionsProps) {
@@ -196,10 +174,7 @@ function Options(props: OptionsProps) {
       {props.devices
         .filter((device) => device.type === props.type)
         .map((device) => (
-          <option
-            key={device.id}
-            value={JSON.stringify({ deviceId: device.id })}
-          >
+          <option key={device.id} value={JSON.stringify({ deviceId: device.id })}>
             {device.name || device.type}
           </option>
         ))}

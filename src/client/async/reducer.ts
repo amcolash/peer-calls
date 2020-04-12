@@ -1,9 +1,4 @@
-import {
-  AsyncAction,
-  PendingAction,
-  ResolvedAction,
-  RejectedAction,
-} from "./action";
+import { AsyncAction, PendingAction, ResolvedAction, RejectedAction } from './action';
 
 export function reduce<State, T extends string, P>(
   state: State,
@@ -13,11 +8,11 @@ export function reduce<State, T extends string, P>(
   handleRejected: (state: State, action: RejectedAction<T>) => State
 ): State {
   switch (action.status) {
-    case "pending":
+    case 'pending':
       return handlePending(state, action);
-    case "resolved":
+    case 'resolved':
       return handleResolved(state, action);
-    case "rejected":
+    case 'rejected':
       return handleRejected(state, action);
   }
 }

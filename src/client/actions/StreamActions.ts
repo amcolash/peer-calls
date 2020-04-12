@@ -1,6 +1,6 @@
-import * as constants from "../constants";
+import * as constants from '../constants';
 
-export type StreamType = "camera" | "desktop";
+export type StreamType = 'camera' | 'desktop';
 
 export interface AddStreamPayload {
   userId: string;
@@ -9,12 +9,12 @@ export interface AddStreamPayload {
 }
 
 export interface AddStreamAction {
-  type: "PEER_STREAM_ADD";
+  type: 'PEER_STREAM_ADD';
   payload: AddStreamPayload;
 }
 
 export interface RemoveStreamAction {
-  type: "PEER_STREAM_REMOVE";
+  type: 'PEER_STREAM_REMOVE';
   payload: RemoveStreamPayload;
 }
 
@@ -29,7 +29,7 @@ export interface MinimizeTogglePayload {
 }
 
 export interface MinimizeToggleAction {
-  type: "MINIMIZE_TOGGLE";
+  type: 'MINIMIZE_TOGGLE';
   payload: MinimizeTogglePayload;
 }
 
@@ -40,7 +40,7 @@ export interface RemoveStreamTrackPayload {
 }
 
 export interface RemoveStreamTrackAction {
-  type: "PEER_STREAM_TRACK_REMOVE";
+  type: 'PEER_STREAM_TRACK_REMOVE';
   payload: RemoveStreamTrackPayload;
 }
 
@@ -51,7 +51,7 @@ export interface AddStreamTrackPayload {
 }
 
 export interface AddStreamTrackAction {
-  type: "PEER_STREAM_TRACK_ADD";
+  type: 'PEER_STREAM_TRACK_ADD';
   payload: AddStreamTrackPayload;
 }
 
@@ -64,38 +64,24 @@ export const addStream = (payload: AddStreamPayload): AddStreamAction => ({
   payload,
 });
 
-export const removeStream = (
-  userId: string,
-  stream: MediaStream
-): RemoveStreamAction => ({
+export const removeStream = (userId: string, stream: MediaStream): RemoveStreamAction => ({
   type: constants.STREAM_REMOVE,
   payload: { userId, stream },
 });
 
-export const addTrack = (
-  payload: AddStreamTrackPayload
-): AddStreamTrackAction => ({
+export const addTrack = (payload: AddStreamTrackPayload): AddStreamTrackAction => ({
   type: constants.STREAM_TRACK_ADD,
   payload,
 });
 
-export const removeTrack = (
-  payload: RemoveStreamTrackPayload
-): RemoveStreamTrackAction => ({
+export const removeTrack = (payload: RemoveStreamTrackPayload): RemoveStreamTrackAction => ({
   type: constants.STREAM_TRACK_REMOVE,
   payload,
 });
 
-export const minimizeToggle = (
-  payload: MinimizeTogglePayload
-): MinimizeToggleAction => ({
+export const minimizeToggle = (payload: MinimizeTogglePayload): MinimizeToggleAction => ({
   type: constants.MINIMIZE_TOGGLE,
   payload,
 });
 
-export type StreamAction =
-  | AddStreamAction
-  | RemoveStreamAction
-  | MinimizeToggleAction
-  | RemoveStreamTrackAction
-  | AddStreamTrackAction;
+export type StreamAction = AddStreamAction | RemoveStreamAction | MinimizeToggleAction | RemoveStreamTrackAction | AddStreamTrackAction;

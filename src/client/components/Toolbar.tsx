@@ -1,13 +1,13 @@
-import classnames from "classnames";
-import React from "react";
-import screenfull from "screenfull";
-import { removeStream } from "../actions/StreamActions";
-import { getDesktopStream } from "../actions/MediaActions";
-import { StreamWithURL } from "../reducers/streams";
-import { ME, DIAL_STATE_IN_CALL, DialState } from "../constants";
+import classnames from 'classnames';
+import React from 'react';
+import screenfull from 'screenfull';
+import { removeStream } from '../actions/StreamActions';
+import { getDesktopStream } from '../actions/MediaActions';
+import { StreamWithURL } from '../reducers/streams';
+import { ME, DIAL_STATE_IN_CALL, DialState } from '../constants';
 
 const hidden = {
-  display: "none",
+  display: 'none',
 };
 
 export interface ToolbarProps {
@@ -46,23 +46,14 @@ function ToolbarButton(props: ToolbarButtonProps) {
   const icon = !on && props.offIcon ? props.offIcon : props.icon;
 
   return (
-    <a
-      className={classnames("button", props.className, { blink, on })}
-      onClick={props.onClick}
-      href="#"
-    >
-      <span className={classnames("icon", icon)}>
-        {!!props.badge && <span className="badge">{props.badge}</span>}
-      </span>
+    <a className={classnames('button', props.className, { blink, on })} onClick={props.onClick} href="#">
+      <span className={classnames('icon', icon)}>{!!props.badge && <span className="badge">{props.badge}</span>}</span>
       <span className="tooltip">{props.title}</span>
     </a>
   );
 }
 
-export default class Toolbar extends React.PureComponent<
-  ToolbarProps,
-  ToolbarState
-> {
+export default class Toolbar extends React.PureComponent<ToolbarProps, ToolbarState> {
   file = React.createRef<HTMLInputElement>();
 
   constructor(props: ToolbarProps) {
@@ -105,15 +96,13 @@ export default class Toolbar extends React.PureComponent<
     }
   };
   handleHangoutClick = () => {
-    window.location.href = "/";
+    window.location.href = '/';
   };
   handleSendFile = () => {
     this.file.current!.click();
   };
   handleSelectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    Array.from(event.target!.files!).forEach((file) =>
-      this.props.onSendFile(file)
-    );
+    Array.from(event.target!.files!).forEach((file) => this.props.onSendFile(file));
   };
   handleToggleChat = () => {
     this.setState({
@@ -135,13 +124,7 @@ export default class Toolbar extends React.PureComponent<
 
     return (
       <div className="toolbar active">
-        <input
-          style={hidden}
-          type="file"
-          multiple
-          ref={this.file}
-          onChange={this.handleSelectFiles}
-        />
+        <input style={hidden} type="file" multiple ref={this.file} onChange={this.handleSelectFiles} />
 
         <ToolbarButton
           badge={unreadCount}
@@ -153,12 +136,7 @@ export default class Toolbar extends React.PureComponent<
           title="Toggle Chat"
         />
 
-        <ToolbarButton
-          className="send-file"
-          icon="icon-file-text2"
-          onClick={this.handleSendFile}
-          title="Send File"
-        />
+        <ToolbarButton className="send-file" icon="icon-file-text2" onClick={this.handleSendFile} title="Send File" />
 
         <ToolbarButton
           className="stream-desktop"
@@ -199,12 +177,7 @@ export default class Toolbar extends React.PureComponent<
         />
 
         {this.props.dialState === DIAL_STATE_IN_CALL && (
-          <ToolbarButton
-            onClick={this.props.onHangup}
-            className="hangup"
-            icon="icon-call_end"
-            title="Hang Up"
-          />
+          <ToolbarButton onClick={this.props.onHangup} className="hangup" icon="icon-call_end" title="Hang Up" />
         )}
       </div>
     );

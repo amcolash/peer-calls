@@ -1,5 +1,5 @@
-import React from "react";
-import classnames from "classnames";
+import React from 'react';
+import classnames from 'classnames';
 
 export interface DropdownProps {
   label: string | React.ReactElement;
@@ -10,10 +10,7 @@ export interface DropdownState {
   open: boolean;
 }
 
-export class Dropdown extends React.PureComponent<
-  DropdownProps,
-  DropdownState
-> {
+export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> {
   state = { open: false };
 
   handleClick = () => {
@@ -21,8 +18,8 @@ export class Dropdown extends React.PureComponent<
   };
   render() {
     const { handleClick } = this;
-    const classNames = classnames("dropdown-list", {
-      "dropdown-list-open": this.state.open,
+    const classNames = classnames('dropdown-list', {
+      'dropdown-list-open': this.state.open,
     });
 
     const menu = React.Children.map(this.props.children, (child) => {

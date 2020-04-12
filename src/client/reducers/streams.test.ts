@@ -1,33 +1,31 @@
-jest.mock("../window");
+jest.mock('../window');
 
-import * as StreamActions from "../actions/StreamActions";
-import reducers from "./index";
-import { createObjectURL, MediaStream, MediaStreamTrack } from "../window";
-import { applyMiddleware, createStore, Store } from "redux";
-import { create } from "../middlewares";
+import * as StreamActions from '../actions/StreamActions';
+import reducers from './index';
+import { createObjectURL, MediaStream, MediaStreamTrack } from '../window';
+import { applyMiddleware, createStore, Store } from 'redux';
+import { create } from '../middlewares';
 
-describe("reducers/alerts", () => {
+describe('reducers/alerts', () => {
   let store: Store, stream: MediaStream, userId: string;
   beforeEach(() => {
     store = createStore(reducers, applyMiddleware(...create()));
-    userId = "test id";
+    userId = 'test id';
     stream = new MediaStream();
   });
 
   afterEach(() => {
-    (createObjectURL as jest.Mock).mockImplementation(
-      (object) => "blob://" + String(object)
-    );
+    (createObjectURL as jest.Mock).mockImplementation((object) => 'blob://' + String(object));
   });
 
-  describe("defaultState", () => {
-    it("should have default state set", () => {
+  describe('defaultState', () => {
+    it('should have default state set', () => {
       expect(store.getState().streams).toEqual({});
     });
   });
 
-  describe("addStream", () => {
-    it("adds a stream", () => {
+  describe('addStream', () => {
+    it('adds a stream', () => {
       store.dispatch(StreamActions.addStream({ userId, stream }));
       expect(store.getState().streams).toEqual({
         [userId]: {
@@ -42,9 +40,9 @@ describe("reducers/alerts", () => {
         },
       });
     });
-    it("does not fail when createObjectURL fails", () => {
+    it('does not fail when createObjectURL fails', () => {
       (createObjectURL as jest.Mock).mockImplementation(() => {
-        throw new Error("test");
+        throw new Error('test');
       });
       store.dispatch(StreamActions.addStream({ userId, stream }));
       expect(store.getState().streams).toEqual({
@@ -62,25 +60,25 @@ describe("reducers/alerts", () => {
     });
   });
 
-  describe("removeStream", () => {
-    it("removes a stream", () => {
+  describe('removeStream', () => {
+    it('removes a stream', () => {
       store.dispatch(StreamActions.addStream({ userId, stream }));
       store.dispatch(StreamActions.removeStream(userId, stream));
       expect(store.getState().streams).toEqual({});
     });
-    it("does not fail when no stream", () => {
+    it('does not fail when no stream', () => {
       store.dispatch(StreamActions.removeStream(userId, stream));
     });
   });
 
-  describe("addStreamTrack", () => {
+  describe('addStreamTrack', () => {
     let stream: MediaStream;
     beforeEach(() => {
       stream = new MediaStream();
       (stream.getTracks as jest.Mock).mockReturnValue([]);
     });
 
-    it("adds a stream when stream does not exist", () => {
+    it('adds a stream when stream does not exist', () => {
       const track = new MediaStreamTrack();
       store.dispatch(
         StreamActions.addTrack({
@@ -102,7 +100,7 @@ describe("reducers/alerts", () => {
       });
     });
 
-    it("adds a track to stream when track not added to stream", () => {
+    it('adds a track to stream when track not added to stream', () => {
       const track = new MediaStreamTrack();
       store.dispatch(
         StreamActions.addTrack({
@@ -115,7 +113,7 @@ describe("reducers/alerts", () => {
       expect((stream.addTrack as jest.Mock).mock.calls[0][0]).toBe(track);
     });
 
-    it("adds stream and does not add existing track in stream", () => {
+    it('adds stream and does not add existing track in stream', () => {
       const track = new MediaStreamTrack();
       (stream.getTracks as jest.Mock).mockReturnValue([track]);
       store.dispatch(
@@ -139,7 +137,7 @@ describe("reducers/alerts", () => {
       });
     });
 
-    it("adds missing track to existing stream", () => {
+    it('adds missing track to existing stream', () => {
       const track = new MediaStreamTrack();
       store.dispatch(
         StreamActions.addStream({
@@ -170,7 +168,7 @@ describe("reducers/alerts", () => {
     });
   });
 
-  describe("removeStreamTrack", () => {
+  describe('removeStreamTrack', () => {
     let stream: MediaStream;
     let tracks: MediaStreamTrack[];
     beforeEach(() => {
@@ -183,14 +181,12 @@ describe("reducers/alerts", () => {
       );
       tracks = [];
       (stream.getTracks as jest.Mock).mockImplementation(() => tracks);
-      (stream.removeTrack as jest.Mock).mockImplementation(
-        (track: MediaStreamTrack) => {
-          tracks = tracks.filter((t) => t !== track);
-        }
-      );
+      (stream.removeTrack as jest.Mock).mockImplementation((track: MediaStreamTrack) => {
+        tracks = tracks.filter((t) => t !== track);
+      });
     });
 
-    it("removes a track from stream", () => {
+    it('removes a track from stream', () => {
       const track = new MediaStreamTrack();
       tracks = [track, new MediaStreamTrack()];
       store.dispatch(
@@ -213,7 +209,7 @@ describe("reducers/alerts", () => {
       });
     });
 
-    it("removes a stream when no tracks left in stream", () => {
+    it('removes a stream when no tracks left in stream', () => {
       const track = new MediaStreamTrack();
       tracks = [track];
       store.dispatch(

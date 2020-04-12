@@ -1,9 +1,9 @@
-import * as constants from "../constants";
-import { MinimizeToggleAction, StreamAction } from "../actions/StreamActions";
+import * as constants from '../constants';
+import { MinimizeToggleAction, StreamAction } from '../actions/StreamActions';
 
 export type ActiveState = null | string;
 
-export type WindowState = undefined | "minimized";
+export type WindowState = undefined | 'minimized';
 
 export interface WindowStates {
   // For example: `${userId}_${index}`
@@ -11,7 +11,7 @@ export interface WindowStates {
 }
 
 export function getStreamKey(userId: string, streamId?: string) {
-  return userId + "_" + streamId;
+  return userId + '_' + streamId;
 }
 
 function unminimize(state: WindowStates, key: string): WindowStates {
@@ -22,22 +22,16 @@ function unminimize(state: WindowStates, key: string): WindowStates {
 function minimize(state: WindowStates, key: string): WindowStates {
   return {
     ...state,
-    [key]: "minimized",
+    [key]: 'minimized',
   };
 }
 
-function minimizeToggle(
-  state: WindowStates,
-  action: MinimizeToggleAction
-): WindowStates {
+function minimizeToggle(state: WindowStates, action: MinimizeToggleAction): WindowStates {
   const key = getStreamKey(action.payload.userId, action.payload.streamId);
   return state[key] ? unminimize(state, key) : minimize(state, key);
 }
 
-export default function windowStates(
-  state: WindowStates = {},
-  action: StreamAction
-): WindowStates {
+export default function windowStates(state: WindowStates = {}, action: StreamAction): WindowStates {
   switch (action.type) {
     case constants.MINIMIZE_TOGGLE:
       return minimizeToggle(state, action);

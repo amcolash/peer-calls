@@ -1,17 +1,17 @@
-import * as ChatActions from "./ChatActions";
-import * as NicknameActions from "./NicknameActions";
-import * as NotifyActions from "./NotifyActions";
-import * as StreamActions from "./StreamActions";
-import * as constants from "../constants";
-import Peer, { SignalData } from "simple-peer";
-import forEach from "lodash/forEach";
-import _debug from "debug";
-import { iceServers } from "../window";
-import { Dispatch, GetState } from "../store";
-import { ClientSocket } from "../socket";
-import { getNickname } from "../nickname";
+import * as ChatActions from './ChatActions';
+import * as NicknameActions from './NicknameActions';
+import * as NotifyActions from './NotifyActions';
+import * as StreamActions from './StreamActions';
+import * as constants from '../constants';
+import Peer, { SignalData } from 'simple-peer';
+import forEach from 'lodash/forEach';
+import _debug from 'debug';
+import { iceServers } from '../window';
+import { Dispatch, GetState } from '../store';
+import { ClientSocket } from '../socket';
+import { getNickname } from '../nickname';
 
-const debug = _debug("peercalls");
+const debug = _debug('peercalls');
 
 export interface Peers {
   [id: string]: Peer.Instance;
@@ -38,23 +38,23 @@ class PeerHandler {
   }
   handleError = (err: Error) => {
     const { dispatch, getState, user } = this;
-    debug("peer: %s, error %s", user.id, err.stack);
-    dispatch(NotifyActions.error("A peer connection error occurred"));
+    debug('peer: %s, error %s', user.id, err.stack);
+    dispatch(NotifyActions.error('A peer connection error occurred'));
     const peer = getState().peers[user.id];
     peer && peer.destroy();
     dispatch(removePeer(user.id));
   };
   handleSignal = (signal: SignalData) => {
     const { socket, user } = this;
-    debug("peer: %s, signal: %o", user.id, signal);
+    debug('peer: %s, signal: %o', user.id, signal);
 
     const payload = { userId: user.id, signal };
-    socket.emit("signal", payload);
+    socket.emit('signal', payload);
   };
   handleConnect = () => {
     const { dispatch, user, getState } = this;
-    debug("peer: %s, connect", user.id);
-    dispatch(NotifyActions.warning("Peer connection established"));
+    debug('peer: %s, connect', user.id);
+    dispatch(NotifyActions.warning('Peer connection established'));
 
     const state = getState();
     const peer = state.peers[user.id];
@@ -72,18 +72,18 @@ class PeerHandler {
     if (nickname) {
       sendData(peer, {
         payload: { nickname },
-        type: "nickname",
+        type: 'nickname',
       });
     }
   };
   handleTrack = (track: MediaStreamTrack, stream: MediaStream) => {
     const { user, dispatch } = this;
     const userId = user.id;
-    debug("peer: %s, track: %s", userId, track.id);
+    debug('peer: %s, track: %s', userId, track.id);
     // Listen to mute event to know when a track was removed
     // https://github.com/feross/simple-peer/issues/512
     track.onmute = () => {
-      debug("peer: %s, track muted: %s", userId, track.id);
+      debug('peer: %s, track muted: %s', userId, track.id);
       dispatch(
         StreamActions.removeTrack({
           userId,
@@ -93,7 +93,7 @@ class PeerHandler {
       );
     };
     track.onunmute = () => {
-      debug("peer: %s, track unmuted: %s", userId, track.id);
+      debug('peer: %s, track unmuted: %s', userId, track.id);
       dispatch(
         StreamActions.addTrack({
           userId,
@@ -112,10 +112,10 @@ class PeerHandler {
   handleData = (buffer: ArrayBuffer) => {
     const { dispatch, getState, user } = this;
     const state = getState();
-    const message = JSON.parse(new window.TextDecoder("utf-8").decode(buffer));
-    debug("peer: %s, message: %o", user.id, message);
+    const message = JSON.parse(new window.TextDecoder('utf-8').decode(buffer));
+    debug('peer: %s, message: %o', user.id, message);
     switch (message.type) {
-      case "file":
+      case 'file':
         dispatch(
           ChatActions.addMessage({
             userId: user.id,
@@ -125,15 +125,11 @@ class PeerHandler {
           })
         );
         break;
-      case "nickname":
+      case 'nickname':
         dispatch(
           ChatActions.addMessage({
             userId: constants.PEERCALLS,
-            message:
-              "User " +
-              getNickname(state.nicknames, user.id) +
-              " is now known as " +
-              (message.payload.nickname || user.id),
+            message: 'User ' + getNickname(state.nicknames, user.id) + ' is now known as ' + (message.payload.nickname || user.id),
             timestamp: new Date().toLocaleString(),
             system: true,
             image: undefined,
@@ -159,7 +155,7 @@ class PeerHandler {
   };
   handleClose = () => {
     const { dispatch, user, getState } = this;
-    dispatch(NotifyActions.error("Peer connection closed"));
+    dispatch(NotifyActions.error('Peer connection closed'));
     const state = getState();
     const userStreams = state.streams[user.id];
     userStreams &&
@@ -190,12 +186,12 @@ export function createPeer(options: CreatePeerOptions) {
 
   return (dispatch: Dispatch, getState: GetState) => {
     const userId = user.id;
-    debug("create peer: %s, stream:", userId, stream);
-    dispatch(NotifyActions.warning("Connecting to peer..."));
+    debug('create peer: %s, stream:', userId, stream);
+    dispatch(NotifyActions.warning('Connecting to peer...'));
 
     const oldPeer = getState().peers[userId];
     if (oldPeer) {
-      dispatch(NotifyActions.info("Cleaning up old connection..."));
+      dispatch(NotifyActions.info('Cleaning up old connection...'));
       oldPeer.destroy();
       dispatch(removePeer(userId));
     }
@@ -236,7 +232,7 @@ export interface AddPeerParams {
 }
 
 export interface AddPeerAction {
-  type: "PEER_ADD";
+  type: 'PEER_ADD';
   payload: AddPeerParams;
 }
 
@@ -246,7 +242,7 @@ export const addPeer = (payload: AddPeerParams): AddPeerAction => ({
 });
 
 export interface RemovePeerAction {
-  type: "PEER_REMOVE";
+  type: 'PEER_REMOVE';
   payload: { userId: string };
 }
 
@@ -258,7 +254,7 @@ export const removePeer = (userId: string): RemovePeerAction => ({
 export type PeerAction = AddPeerAction | RemovePeerAction;
 
 export interface TextMessage {
-  type: "text";
+  type: 'text';
   payload: string;
 }
 
@@ -270,12 +266,12 @@ export interface Base64File {
 }
 
 export interface FileMessage {
-  type: "file";
+  type: 'file';
   payload: Base64File;
 }
 
 export interface NicknameMessage {
-  type: "nickname";
+  type: 'nickname';
   payload: {
     nickname: string;
   };
@@ -287,18 +283,11 @@ function sendData(peer: Peer.Instance, message: Message) {
   peer.send(JSON.stringify(message));
 }
 
-export const sendMessage = (message: Message) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const sendMessage = (message: Message) => (dispatch: Dispatch, getState: GetState) => {
   const { peers } = getState();
-  debug(
-    "Sending message type: %s to %s peers.",
-    message.type,
-    Object.keys(peers).length
-  );
+  debug('Sending message type: %s to %s peers.', message.type, Object.keys(peers).length);
   switch (message.type) {
-    case "file":
+    case 'file':
       dispatch(
         ChatActions.addMessage({
           userId: constants.ME,
@@ -308,11 +297,11 @@ export const sendMessage = (message: Message) => (
         })
       );
       break;
-    case "nickname":
+    case 'nickname':
       dispatch(
         ChatActions.addMessage({
           userId: constants.PEERCALLS,
-          message: "You are now known as: " + message.payload.nickname,
+          message: 'You are now known as: ' + message.payload.nickname,
           timestamp: new Date().toLocaleString(),
           system: true,
           image: undefined,
@@ -340,18 +329,15 @@ export const sendMessage = (message: Message) => (
   });
 };
 
-export const sendFile = (file: File) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const sendFile = (file: File) => async (dispatch: Dispatch, getState: GetState) => {
   const { name, size, type } = file;
   if (!window.FileReader) {
-    dispatch(NotifyActions.error("File API is not supported by your browser"));
+    dispatch(NotifyActions.error('File API is not supported by your browser'));
     return;
   }
   const reader = new window.FileReader();
   const base64File = await new Promise<Base64File>((resolve) => {
-    reader.addEventListener("load", () => {
+    reader.addEventListener('load', () => {
       resolve({
         name,
         size,
@@ -362,5 +348,5 @@ export const sendFile = (file: File) => async (
     reader.readAsDataURL(file);
   });
 
-  sendMessage({ payload: base64File, type: "file" })(dispatch, getState);
+  sendMessage({ payload: base64File, type: 'file' })(dispatch, getState);
 };

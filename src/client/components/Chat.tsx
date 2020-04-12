@@ -1,11 +1,11 @@
-import classnames from "classnames";
-import React from "react";
-import { Message as ChatMessage } from "../actions/ChatActions";
-import { Message } from "../actions/PeerActions";
-import { Nicknames } from "../reducers/nicknames";
-import Input from "./Input";
-import { ME } from "../constants";
-import { getNickname } from "../nickname";
+import classnames from 'classnames';
+import React from 'react';
+import { Message as ChatMessage } from '../actions/ChatActions';
+import { Message } from '../actions/PeerActions';
+import { Nicknames } from '../reducers/nicknames';
+import Input from './Input';
+import { ME } from '../constants';
+import { getNickname } from '../nickname';
 
 export interface MessageProps {
   message: ChatMessage;
@@ -54,7 +54,7 @@ export default class Chat extends React.PureComponent<ChatProps> {
     const { messages, sendMessage } = this.props;
     return (
       <div
-        className={classnames("chat-container", {
+        className={classnames('chat-container', {
           show: this.props.visible,
         })}
       >
@@ -73,9 +73,7 @@ export default class Chat extends React.PureComponent<ChatProps> {
                 {message.userId === ME ? (
                   <div className="chat-item chat-item-me">
                     <div className="message">
-                      <span className="message-user-name">
-                        {getNickname(this.props.nicknames, message.userId)}
-                      </span>
+                      <span className="message-user-name">{getNickname(this.props.nicknames, message.userId)}</span>
                       <span className="icon icon-schedule" />
                       <time className="message-time">{message.timestamp}</time>
                       <MessageEntry message={message} />
@@ -94,9 +92,7 @@ export default class Chat extends React.PureComponent<ChatProps> {
                       <span className="chat-item-img icon icon-face" />
                     )}
                     <div className="message">
-                      <span className="message-user-name">
-                        {getNickname(this.props.nicknames, message.userId)}
-                      </span>
+                      <span className="message-user-name">{getNickname(this.props.nicknames, message.userId)}</span>
                       <span className="icon icon-schedule" />
                       <time className="message-time">{message.timestamp}</time>
                       <MessageEntry message={message} />

@@ -1,8 +1,8 @@
-import _debug from "debug";
-import forEach from "lodash/forEach";
-import omit from "lodash/omit";
-import { HangUpAction } from "../actions/CallActions";
-import { MediaStreamAction } from "../actions/MediaActions";
+import _debug from 'debug';
+import forEach from 'lodash/forEach';
+import omit from 'lodash/omit';
+import { HangUpAction } from '../actions/CallActions';
+import { MediaStreamAction } from '../actions/MediaActions';
 import {
   AddStreamAction,
   AddStreamTrackAction,
@@ -10,25 +10,18 @@ import {
   RemoveStreamTrackAction,
   StreamAction,
   StreamType,
-} from "../actions/StreamActions";
-import {
-  HANG_UP,
-  MEDIA_STREAM,
-  STREAM_ADD,
-  STREAM_REMOVE,
-  STREAM_TRACK_ADD,
-  STREAM_TRACK_REMOVE,
-} from "../constants";
-import { createObjectURL, revokeObjectURL } from "../window";
+} from '../actions/StreamActions';
+import { HANG_UP, MEDIA_STREAM, STREAM_ADD, STREAM_REMOVE, STREAM_TRACK_ADD, STREAM_TRACK_REMOVE } from '../constants';
+import { createObjectURL, revokeObjectURL } from '../window';
 
-const debug = _debug("peercalls");
+const debug = _debug('peercalls');
 const defaultState = Object.freeze({});
 
 function safeCreateObjectURL(stream: MediaStream) {
   try {
     return createObjectURL(stream);
   } catch (err) {
-    debug("Error using createObjectURL: %s", err);
+    debug('Error using createObjectURL: %s', err);
     return undefined;
   }
 }
@@ -48,10 +41,7 @@ export interface StreamsState {
   [userId: string]: UserStreams;
 }
 
-function addStream(
-  state: StreamsState,
-  payload: AddStreamAction["payload"]
-): StreamsState {
+function addStream(state: StreamsState, payload: AddStreamAction['payload']): StreamsState {
   const { userId, stream } = payload;
 
   const userStreams = state[userId] || {
@@ -78,10 +68,7 @@ function addStream(
   };
 }
 
-function removeStream(
-  state: StreamsState,
-  payload: RemoveStreamAction["payload"]
-): StreamsState {
+function removeStream(state: StreamsState, payload: RemoveStreamAction['payload']): StreamsState {
   const { userId, stream } = payload;
   const userStreams = state[userId];
   if (!userStreams) {
@@ -118,10 +105,7 @@ function removeStream(
   return omit(state, [userId]);
 }
 
-function removeStreamTrack(
-  state: StreamsState,
-  payload: RemoveStreamTrackAction["payload"]
-): StreamsState {
+function removeStreamTrack(state: StreamsState, payload: RemoveStreamTrackAction['payload']): StreamsState {
   const { userId, stream, track } = payload;
   const userStreams = state[userId];
   if (!userStreams) {
@@ -140,14 +124,10 @@ function removeStreamTrack(
   return state;
 }
 
-function addStreamTrack(
-  state: StreamsState,
-  payload: AddStreamTrackAction["payload"]
-): StreamsState {
+function addStreamTrack(state: StreamsState, payload: AddStreamTrackAction['payload']): StreamsState {
   const { userId, stream, track } = payload;
   const userStreams = state[userId];
-  const existingUserStream =
-    userStreams && userStreams.streams.find((s) => s.stream === stream);
+  const existingUserStream = userStreams && userStreams.streams.find((s) => s.stream === stream);
 
   if (!stream.getTracks().includes(track)) {
     stream.addTrack(track);
@@ -163,10 +143,7 @@ function addStreamTrack(
   return state;
 }
 
-export default function streams(
-  state: StreamsState = defaultState,
-  action: StreamAction | MediaStreamAction | HangUpAction
-): StreamsState {
+export default function streams(state: StreamsState = defaultState, action: StreamAction | MediaStreamAction | HangUpAction): StreamsState {
   switch (action.type) {
     case STREAM_ADD:
       return addStream(state, action.payload);
@@ -187,7 +164,7 @@ export default function streams(
       });
       return defaultState;
     case MEDIA_STREAM:
-      if (action.status === "resolved") {
+      if (action.status === 'resolved') {
         return addStream(state, action.payload);
       } else {
         return state;

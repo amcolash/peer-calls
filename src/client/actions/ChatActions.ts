@@ -1,7 +1,7 @@
-import { MESSAGE_ADD } from "../constants";
+import { MESSAGE_ADD } from '../constants';
 
 export interface MessageAddAction {
-  type: "MESSAGE_ADD";
+  type: 'MESSAGE_ADD';
   payload: Message;
 }
 

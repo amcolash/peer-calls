@@ -1,17 +1,13 @@
-import React from "react";
-import { StreamWithURL, StreamsState } from "../reducers/streams";
-import forEach from "lodash/forEach";
-import { ME } from "../constants";
-import { getNickname } from "../nickname";
-import Video from "./Video";
-import { Nicknames } from "../reducers/nicknames";
-import { NicknameMessage } from "../actions/PeerActions";
-import {
-  getStreamKey,
-  WindowStates,
-  WindowState,
-} from "../reducers/windowStates";
-import { MinimizeTogglePayload } from "../actions/StreamActions";
+import React from 'react';
+import { StreamWithURL, StreamsState } from '../reducers/streams';
+import forEach from 'lodash/forEach';
+import { ME } from '../constants';
+import { getNickname } from '../nickname';
+import Video from './Video';
+import { Nicknames } from '../reducers/nicknames';
+import { NicknameMessage } from '../actions/PeerActions';
+import { getStreamKey, WindowStates, WindowState } from '../reducers/windowStates';
+import { MinimizeTogglePayload } from '../actions/StreamActions';
 
 export interface VideosProps {
   onChangeNickname: (message: NicknameMessage) => void;
@@ -41,7 +37,7 @@ export default class Videos extends React.PureComponent<VideosProps> {
     const maximized: StreamProps[] = [];
 
     function addStreamProps(props: StreamProps) {
-      if (props.windowState === "minimized") {
+      if (props.windowState === 'minimized') {
         minimized.push(props);
       } else {
         maximized.push(props);
@@ -71,7 +67,7 @@ export default class Videos extends React.PureComponent<VideosProps> {
           key,
           stream: stream,
           userId,
-          mirrored: localUser && stream.type === "camera",
+          mirrored: localUser && stream.type === 'camera',
           muted: localUser,
           localUser,
           windowState: windowStates[key],

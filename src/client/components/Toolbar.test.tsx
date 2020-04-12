@@ -1,20 +1,15 @@
-jest.mock("../window");
-import React from "react";
-import ReactDOM from "react-dom";
-import TestUtils from "react-dom/test-utils";
-import { getDesktopStream } from "../actions/MediaActions";
-import { AddStreamPayload, removeStream } from "../actions/StreamActions";
-import {
-  STREAM_TYPE_CAMERA,
-  STREAM_TYPE_DESKTOP,
-  DIAL_STATE_IN_CALL,
-  DialState,
-} from "../constants";
-import { StreamWithURL } from "../reducers/streams";
-import { MediaStream } from "../window";
-import Toolbar, { ToolbarProps } from "./Toolbar";
+jest.mock('../window');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+import { getDesktopStream } from '../actions/MediaActions';
+import { AddStreamPayload, removeStream } from '../actions/StreamActions';
+import { STREAM_TYPE_CAMERA, STREAM_TYPE_DESKTOP, DIAL_STATE_IN_CALL, DialState } from '../constants';
+import { StreamWithURL } from '../reducers/streams';
+import { MediaStream } from '../window';
+import Toolbar, { ToolbarProps } from './Toolbar';
 
-describe("components/Toolbar", () => {
+describe('components/Toolbar', () => {
   interface StreamState {
     stream: AddStreamPayload | null;
   }
@@ -60,7 +55,7 @@ describe("components/Toolbar", () => {
     onHangup = jest.fn();
     onGetDesktopStream = jest.fn().mockImplementation(() => Promise.resolve());
     onRemoveStream = jest.fn();
-    const div = document.createElement("div");
+    const div = document.createElement('div');
     const stream: StreamWithURL = {
       stream: mediaStream,
       type: STREAM_TYPE_CAMERA,
@@ -91,62 +86,62 @@ describe("components/Toolbar", () => {
     await render();
   });
 
-  describe("handleChatClick", () => {
-    it("toggle chat", () => {
+  describe('handleChatClick', () => {
+    it('toggle chat', () => {
       expect(onToggleChat.mock.calls.length).toBe(0);
-      const button = node.querySelector(".chat")!;
+      const button = node.querySelector('.chat')!;
       TestUtils.Simulate.click(button);
       expect(onToggleChat.mock.calls.length).toBe(1);
     });
   });
 
-  describe("handleMicClick", () => {
-    it("toggle mic", () => {
-      const button = node.querySelector(".mute-audio")!;
+  describe('handleMicClick', () => {
+    it('toggle mic', () => {
+      const button = node.querySelector('.mute-audio')!;
       TestUtils.Simulate.click(button);
-      expect(button.classList.contains("on")).toBe(true);
+      expect(button.classList.contains('on')).toBe(true);
     });
   });
 
-  describe("handleCamClick", () => {
-    it("toggle cam", () => {
-      const button = node.querySelector(".mute-video")!;
+  describe('handleCamClick', () => {
+    it('toggle cam', () => {
+      const button = node.querySelector('.mute-video')!;
       TestUtils.Simulate.click(button);
-      expect(button.classList.contains("on")).toBe(true);
+      expect(button.classList.contains('on')).toBe(true);
     });
   });
 
-  describe("handleFullscreenClick", () => {
-    it("toggle fullscreen", () => {
-      const button = node.querySelector(".fullscreen")!;
+  describe('handleFullscreenClick', () => {
+    it('toggle fullscreen', () => {
+      const button = node.querySelector('.fullscreen')!;
       TestUtils.Simulate.click(button);
-      expect(button.classList.contains("on")).toBe(false);
+      expect(button.classList.contains('on')).toBe(false);
     });
   });
 
-  describe("handleHangoutClick", () => {
-    it("hangout", () => {
-      const button = node.querySelector(".hangup")!;
+  describe('handleHangoutClick', () => {
+    it('hangout', () => {
+      const button = node.querySelector('.hangup')!;
       TestUtils.Simulate.click(button);
-      expect(window.location.href).toBe("http://localhost/");
+      expect(window.location.href).toBe('http://localhost/');
     });
   });
 
-  describe("handleSendFile", () => {
-    it("triggers input dialog", () => {
-      const sendFileButton = node.querySelector(".send-file")!;
+  describe('handleSendFile', () => {
+    it('triggers input dialog', () => {
+      const sendFileButton = node.querySelector('.send-file')!;
       const click = jest.fn();
-      const file = node.querySelector("input[type=file]")!;
+      const file = node.querySelector('input[type=file]')!;
       (file as any).click = click;
       TestUtils.Simulate.click(sendFileButton);
       expect(click.mock.calls.length).toBe(1);
     });
   });
 
-  describe("handleSelectFiles", () => {
-    it("iterates through files and calls onSendFile for each", () => {
-      const file = node.querySelector("input[type=file]")!;
-      const files = [{ name: "first" }] as any;
+  describe('handleSelectFiles', () => {
+    it('iterates through files and calls onSendFile for each', () => {
+      const file = node.querySelector('input[type=file]')!;
+      const files = [{ name: 'first' }] as any;
       TestUtils.Simulate.change(file, {
         target: {
           files,
@@ -156,31 +151,31 @@ describe("components/Toolbar", () => {
     });
   });
 
-  describe("onHangup", () => {
-    it("calls onHangup callback", () => {
+  describe('onHangup', () => {
+    it('calls onHangup callback', () => {
       expect(onHangup.mock.calls.length).toBe(0);
-      const hangup = node.querySelector(".hangup")!;
+      const hangup = node.querySelector('.hangup')!;
       expect(hangup).toBeDefined();
       TestUtils.Simulate.click(hangup);
       expect(onHangup.mock.calls.length).toBe(1);
     });
   });
 
-  describe("desktop sharing", () => {
-    it("starts desktop sharing", async () => {
-      const shareDesktop = node.querySelector(".stream-desktop")!;
+  describe('desktop sharing', () => {
+    it('starts desktop sharing', async () => {
+      const shareDesktop = node.querySelector('.stream-desktop')!;
       expect(shareDesktop).toBeDefined();
       TestUtils.Simulate.click(shareDesktop);
       await Promise.resolve();
       expect(onGetDesktopStream.mock.calls.length).toBe(1);
     });
-    it("stops desktop sharing", async () => {
+    it('stops desktop sharing', async () => {
       desktopStream = {
         stream: new MediaStream(),
         type: STREAM_TYPE_DESKTOP,
       };
       await render();
-      const shareDesktop = node.querySelector(".stream-desktop")!;
+      const shareDesktop = node.querySelector('.stream-desktop')!;
       expect(shareDesktop).toBeDefined();
       TestUtils.Simulate.click(shareDesktop);
       await Promise.resolve();

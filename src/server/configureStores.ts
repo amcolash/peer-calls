@@ -1,32 +1,23 @@
-import _debug from "debug";
-import Redis from "ioredis";
-import redisAdapter from "socket.io-redis";
-import { StoreConfig, StoreRedisConfig } from "./config";
-import { Stores } from "./socket";
-import { MemoryStore, RedisStore } from "./store";
+import _debug from 'debug';
+import Redis from 'ioredis';
+import redisAdapter from 'socket.io-redis';
+import { StoreConfig, StoreRedisConfig } from './config';
+import { Stores } from './socket';
+import { MemoryStore, RedisStore } from './store';
 
-const debug = _debug("peercalls");
+const debug = _debug('peercalls');
 
-export function configureStores(
-  io: SocketIO.Server,
-  config: StoreConfig = { type: "memory" }
-): Stores {
+export function configureStores(io: SocketIO.Server, config: StoreConfig = { type: 'memory' }): Stores {
   switch (config.type) {
-    case "redis":
-      debug("Using redis store: %s:%s", config.host, config.port);
+    case 'redis':
+      debug('Using redis store: %s:%s', config.host, config.port);
       configureRedis(io, config);
       return {
-        socketIdByUserId: new RedisStore(
-          createRedisClient(config),
-          [config.prefix, "socketIdByUserId"].join(":")
-        ),
-        userIdBySocketId: new RedisStore(
-          createRedisClient(config),
-          [config.prefix, "socketIdByUserId"].join(":")
-        ),
+        socketIdByUserId: new RedisStore(createRedisClient(config), [config.prefix, 'socketIdByUserId'].join(':')),
+        userIdBySocketId: new RedisStore(createRedisClient(config), [config.prefix, 'socketIdByUserId'].join(':')),
       };
     default:
-      debug("Using in-memory store");
+      debug('Using in-memory store');
       return {
         socketIdByUserId: new MemoryStore(),
         userIdBySocketId: new MemoryStore(),
@@ -39,7 +30,7 @@ function configureRedis(io: SocketIO.Server, config: StoreRedisConfig) {
   const subClient = createRedisClient(config);
   io.adapter(
     redisAdapter({
-      key: "peercalls",
+      key: 'peercalls',
       pubClient,
       subClient,
     })

@@ -1,11 +1,11 @@
-import React, { ReactEventHandler } from "react";
-import classnames from "classnames";
-import { StreamWithURL } from "../reducers/streams";
-import { NicknameMessage } from "../actions/PeerActions";
-import { Nickname } from "./Nickname";
-import { Dropdown } from "./Dropdown";
-import { WindowState } from "../reducers/windowStates";
-import { MinimizeTogglePayload } from "../actions/StreamActions";
+import React, { ReactEventHandler } from 'react';
+import classnames from 'classnames';
+import { StreamWithURL } from '../reducers/streams';
+import { NicknameMessage } from '../actions/PeerActions';
+import { Nickname } from './Nickname';
+import { Dropdown } from './Dropdown';
+import { WindowState } from '../reducers/windowStates';
+import { MinimizeTogglePayload } from '../actions/StreamActions';
 
 export interface VideoProps {
   onMinimizeToggle: (payload: MinimizeTogglePayload) => void;
@@ -38,12 +38,12 @@ export default class Video extends React.PureComponent<VideoProps> {
     const video = this.videoRef.current!;
     const mediaStream = (stream && stream.stream) || null;
     const url = stream && stream.url;
-    if (("srcObject" in video) as unknown) {
+    if (('srcObject' in video) as unknown) {
       if (video.srcObject !== mediaStream) {
         video.srcObject = mediaStream;
       }
     } else if (video.src !== url) {
-      video.src = url || "";
+      video.src = url || '';
     }
   }
   handleMinimize = () => {
@@ -55,13 +55,13 @@ export default class Video extends React.PureComponent<VideoProps> {
   handleToggleCover = () => {
     const v = this.videoRef.current;
     if (v) {
-      v.style.objectFit = v.style.objectFit ? "" : "contain";
+      v.style.objectFit = v.style.objectFit ? '' : 'contain';
     }
   };
   render() {
     const { mirrored, muted, userId, windowState } = this.props;
-    const className = classnames("video-container", {
-      minimized: windowState === "minimized",
+    const className = classnames('video-container', {
+      minimized: windowState === 'minimized',
       mirrored,
     });
 
@@ -79,25 +79,15 @@ export default class Video extends React.PureComponent<VideoProps> {
           muted={muted}
         />
         <div className="video-footer">
-          <Nickname
-            value={this.props.nickname}
-            onChange={this.props.onChangeNickname}
-            localUser={this.props.localUser}
-          />
-          <Dropdown label={"☰"}>
+          <Nickname value={this.props.nickname} onChange={this.props.onChangeNickname} localUser={this.props.localUser} />
+          <Dropdown label={'☰'}>
             <li className="action-minimize" onClick={this.handleMinimize}>
               Toggle Minimize
             </li>
             <li className="action-toggle-fit" onClick={this.handleToggleCover}>
               Toggle Fit
             </li>
-            <li
-              onClick={() =>
-                (this.videoRef.current!.muted = !this.videoRef.current!.muted)
-              }
-            >
-              Mute Person
-            </li>
+            <li onClick={() => (this.videoRef.current!.muted = !this.videoRef.current!.muted)}>Mute Person</li>
           </Dropdown>
         </div>
       </div>

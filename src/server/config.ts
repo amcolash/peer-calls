@@ -1,10 +1,10 @@
-import { readConfig } from "./readConfig";
+import { readConfig } from './readConfig';
 
 export type ICEServer =
   | {
       url: string;
       urls: string[] | string;
-      auth: "secret";
+      auth: 'secret';
       username: string;
       secret: string;
     }
@@ -30,11 +30,11 @@ export interface StoreRedisConfig {
   host: string;
   port: number;
   prefix: string;
-  type: "redis";
+  type: 'redis';
 }
 
 export interface StoreMemoryConfig {
-  type: "memory";
+  type: 'memory';
 }
 
 export type StoreConfig = StoreRedisConfig | StoreMemoryConfig;
@@ -42,8 +42,8 @@ export type StoreConfig = StoreRedisConfig | StoreMemoryConfig;
 const cfg = readConfig();
 
 export const config: Config = {
-  baseUrl: cfg.get("baseUrl", ""),
-  iceServers: cfg.get("iceServers"),
-  ssl: cfg.get("ssl", undefined),
-  store: cfg.get("store", { type: "memory" }),
+  baseUrl: cfg.get('baseUrl', ''),
+  iceServers: cfg.get('iceServers'),
+  ssl: cfg.get('ssl', undefined),
+  store: cfg.get('store', { type: 'memory' }),
 };

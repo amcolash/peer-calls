@@ -1,4 +1,4 @@
-import { Store } from "./store";
+import { Store } from './store';
 
 export class MemoryStore implements Store {
   store: Record<string, string> = {};

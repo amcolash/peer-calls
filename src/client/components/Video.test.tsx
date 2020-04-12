@@ -1,16 +1,16 @@
-jest.mock("../window");
-import React from "react";
-import ReactDOM from "react-dom";
-import TestUtils from "react-dom/test-utils";
-import Video, { VideoProps } from "./Video";
-import { MediaStream } from "../window";
-import { STREAM_TYPE_CAMERA } from "../constants";
-import { StreamWithURL } from "../reducers/streams";
-import { NicknameMessage } from "../actions/PeerActions";
-import { WindowState } from "../reducers/windowStates";
-import { MinimizeTogglePayload } from "../actions/StreamActions";
+jest.mock('../window');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+import Video, { VideoProps } from './Video';
+import { MediaStream } from '../window';
+import { STREAM_TYPE_CAMERA } from '../constants';
+import { StreamWithURL } from '../reducers/streams';
+import { NicknameMessage } from '../actions/PeerActions';
+import { WindowState } from '../reducers/windowStates';
+import { MinimizeTogglePayload } from '../actions/StreamActions';
 
-describe("components/Video", () => {
+describe('components/Video', () => {
   interface VideoState {
     stream: null | StreamWithURL;
   }
@@ -44,9 +44,7 @@ describe("components/Video", () => {
 
   let component: VideoWrapper;
   let video: Video;
-  let onMinimizeToggle: jest.MockedFunction<(
-    payload: MinimizeTogglePayload
-  ) => void>;
+  let onMinimizeToggle: jest.MockedFunction<(payload: MinimizeTogglePayload) => void>;
   let onChangeNickname: jest.MockedFunction<(message: NicknameMessage) => void>;
   let mediaStream: MediaStream;
   let url: string;
@@ -64,12 +62,12 @@ describe("components/Video", () => {
     windowState: undefined,
   };
   async function render(args?: Partial<Flags>) {
-    nickname = "john";
+    nickname = 'john';
     const flags: Flags = Object.assign({}, defaultFlags, args);
     onMinimizeToggle = jest.fn();
     onChangeNickname = jest.fn();
     mediaStream = new MediaStream();
-    const div = document.createElement("div");
+    const div = document.createElement('div');
     component = await new Promise<VideoWrapper>((resolve) => {
       const stream: StreamWithURL = {
         stream: mediaStream,
@@ -96,52 +94,52 @@ describe("components/Video", () => {
     wrapper = div.children[0];
   }
 
-  describe("render", () => {
-    it("should not fail", async () => {
+  describe('render', () => {
+    it('should not fail', async () => {
       await render();
     });
 
-    it("Mirrored and widnowState propogate to rendered classes", async () => {
+    it('Mirrored and widnowState propogate to rendered classes', async () => {
       await render({ mirrored: true });
-      expect(wrapper.className).toBe("video-container mirrored");
+      expect(wrapper.className).toBe('video-container mirrored');
     });
 
-    it("Mirrored and windowState propogate to rendered classes", async () => {
-      await render({ mirrored: true, windowState: "minimized" });
-      expect(wrapper.className).toBe("video-container minimized mirrored");
+    it('Mirrored and windowState propogate to rendered classes', async () => {
+      await render({ mirrored: true, windowState: 'minimized' });
+      expect(wrapper.className).toBe('video-container minimized mirrored');
     });
   });
 
-  describe("componentDidUpdate", () => {
-    describe("src", () => {
+  describe('componentDidUpdate', () => {
+    describe('src', () => {
       beforeEach(async () => {
         await render();
         delete video.videoRef.current!.srcObject;
       });
-      it("updates src only when changed", () => {
+      it('updates src only when changed', () => {
         mediaStream = new MediaStream();
         component.setState({
           stream: {
-            url: "test",
+            url: 'test',
             stream: mediaStream,
             type: STREAM_TYPE_CAMERA,
           },
         });
-        expect(video.videoRef.current!.src).toBe("http://localhost/test");
+        expect(video.videoRef.current!.src).toBe('http://localhost/test');
         component.setState({
           stream: {
-            url: "test",
+            url: 'test',
             stream: mediaStream,
             type: STREAM_TYPE_CAMERA,
           },
         });
       });
-      it("updates srcObject only when changed", () => {
+      it('updates srcObject only when changed', () => {
         video.videoRef.current!.srcObject = null;
         mediaStream = new MediaStream();
         component.setState({
           stream: {
-            url: "test",
+            url: 'test',
             stream: mediaStream,
             type: STREAM_TYPE_CAMERA,
           },
@@ -149,7 +147,7 @@ describe("components/Video", () => {
         expect(video.videoRef.current!.srcObject).toBe(mediaStream);
         component.setState({
           stream: {
-            url: "test",
+            url: 'test',
             stream: mediaStream,
             type: STREAM_TYPE_CAMERA,
           },

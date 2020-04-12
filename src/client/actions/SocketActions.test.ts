@@ -1,18 +1,18 @@
-jest.mock("simple-peer");
-jest.mock("../window");
+jest.mock('simple-peer');
+jest.mock('../window');
 
-import * as SocketActions from "./SocketActions";
-import * as constants from "../constants";
-import Peer from "simple-peer";
-import { EventEmitter } from "events";
-import { createStore, Store, GetState } from "../store";
-import { ClientSocket } from "../socket";
-import { Dispatch } from "redux";
-import { MediaStream } from "../window";
-import { SocketEvent } from "../../shared";
+import * as SocketActions from './SocketActions';
+import * as constants from '../constants';
+import Peer from 'simple-peer';
+import { EventEmitter } from 'events';
+import { createStore, Store, GetState } from '../store';
+import { ClientSocket } from '../socket';
+import { Dispatch } from 'redux';
+import { MediaStream } from '../window';
+import { SocketEvent } from '../../shared';
 
-describe("SocketActions", () => {
-  const roomName = "bla";
+describe('SocketActions', () => {
+  const roomName = 'bla';
 
   let socket: ClientSocket;
   let store: Store;
@@ -21,7 +21,7 @@ describe("SocketActions", () => {
   let instances: Peer.Instance[];
   beforeEach(() => {
     socket = new EventEmitter() as any;
-    (socket as any).id = "a";
+    (socket as any).id = 'a';
 
     store = createStore();
     getState = store.getState;
@@ -31,34 +31,34 @@ describe("SocketActions", () => {
   });
 
   const userA = {
-    socketId: "socket-a",
-    userId: "user-a",
+    socketId: 'socket-a',
+    userId: 'user-a',
   };
   const userId = userA.userId;
 
   const userB = {
-    socketId: "socket-b",
-    userId: "user-b",
+    socketId: 'socket-b',
+    userId: 'user-b',
   };
 
   const userC = {
-    socketId: "socket-c",
-    userId: "user-c",
+    socketId: 'socket-c',
+    userId: 'user-c',
   };
 
-  describe("handshake", () => {
-    describe("users", () => {
+  describe('handshake', () => {
+    describe('users', () => {
       beforeEach(() => {
         SocketActions.handshake({ socket, roomName, userId, store });
         const payload = {
           users: [userA, userB],
           initiator: userA.userId,
         };
-        socket.emit("users", payload);
+        socket.emit('users', payload);
         expect(instances.length).toBe(1);
       });
 
-      it("adds a peer for each new user and keeps active connections", () => {
+      it('adds a peer for each new user and keeps active connections', () => {
         const payload = {
           users: [userA, userC],
           initiator: userC.userId,
@@ -72,19 +72,19 @@ describe("SocketActions", () => {
       });
     });
 
-    describe("signal", () => {
+    describe('signal', () => {
       let data: Peer.SignalData;
       beforeEach(() => {
         data = {} as any;
         SocketActions.handshake({ socket, roomName, userId, store });
-        socket.emit("users", {
+        socket.emit('users', {
           initiator: userA.userId,
           users: [userA, userB],
         });
       });
 
-      it("should forward signal to peer", () => {
-        socket.emit("signal", {
+      it('should forward signal to peer', () => {
+        socket.emit('signal', {
           userId: userB.userId,
           signal: data,
         });
@@ -93,9 +93,9 @@ describe("SocketActions", () => {
         expect((instances[0].signal as jest.Mock).mock.calls.length).toBe(1);
       });
 
-      it("does nothing if no peer", () => {
-        socket.emit("signal", {
-          userId: "a",
+      it('does nothing if no peer', () => {
+        socket.emit('signal', {
+          userId: 'a',
           signal: data,
         });
 
@@ -105,17 +105,17 @@ describe("SocketActions", () => {
     });
   });
 
-  describe("peer events", () => {
+  describe('peer events', () => {
     let peer: Peer.Instance;
     beforeEach(() => {
       let ready = false;
-      socket.once("ready", () => {
+      socket.once('ready', () => {
         ready = true;
       });
 
       SocketActions.handshake({ socket, roomName, userId, store });
 
-      socket.emit("users", {
+      socket.emit('users', {
         initiator: userA.userId,
         users: [userA, userB],
       });
@@ -125,29 +125,29 @@ describe("SocketActions", () => {
       expect(ready).toBeDefined();
     });
 
-    describe("error", () => {
-      it("destroys peer", () => {
-        peer.emit(constants.PEER_EVENT_ERROR, new Error("bla"));
+    describe('error', () => {
+      it('destroys peer', () => {
+        peer.emit(constants.PEER_EVENT_ERROR, new Error('bla'));
         expect((peer.destroy as jest.Mock).mock.calls.length).toBe(1);
       });
     });
 
-    describe("signal", () => {
-      it("emits socket signal with user id", (done) => {
-        const signal = { bla: "bla" };
+    describe('signal', () => {
+      it('emits socket signal with user id', (done) => {
+        const signal = { bla: 'bla' };
 
-        socket.once("signal", (payload: SocketEvent["signal"]) => {
+        socket.once('signal', (payload: SocketEvent['signal']) => {
           expect(payload.userId).toEqual(userB.userId);
           expect(payload.signal).toBe(signal);
           done();
         });
 
-        peer.emit("signal", signal);
+        peer.emit('signal', signal);
       });
     });
 
-    describe("stream", () => {
-      it("adds a stream to streamStore", () => {
+    describe('stream', () => {
+      it('adds a stream to streamStore', () => {
         const stream = {
           getTracks() {
             return [
@@ -174,7 +174,7 @@ describe("SocketActions", () => {
       });
     });
 
-    describe("close", () => {
+    describe('close', () => {
       beforeEach(() => {
         const stream = new MediaStream();
         const track = ({} as unknown) as MediaStreamTrack;
@@ -195,9 +195,9 @@ describe("SocketActions", () => {
         });
       });
 
-      it("removes stream & peer from store", () => {
+      it('removes stream & peer from store', () => {
         expect(store.getState().peers).toEqual({ [userB.userId]: peer });
-        peer.emit("close");
+        peer.emit('close');
         expect(store.getState().streams).toEqual({});
         expect(store.getState().peers).toEqual({});
       });

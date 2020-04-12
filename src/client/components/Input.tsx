@@ -1,10 +1,5 @@
-import React, {
-  ReactEventHandler,
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  MouseEventHandler,
-} from "react";
-import { Message } from "../actions/PeerActions";
+import React, { ReactEventHandler, ChangeEventHandler, KeyboardEventHandler, MouseEventHandler } from 'react';
+import { Message } from '../actions/PeerActions';
 
 export interface InputProps {
   sendMessage: (message: Message) => void;
@@ -19,7 +14,7 @@ const regexp = /^\/([a-z0-9]+) (.*)$/;
 export default class Input extends React.PureComponent<InputProps, InputState> {
   textArea = React.createRef<HTMLTextAreaElement>();
   state = {
-    message: "",
+    message: '',
   };
   handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     this.setState({
@@ -31,7 +26,7 @@ export default class Input extends React.PureComponent<InputProps, InputState> {
     this.submit();
   };
   handleKeyPress: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       this.submit();
     }
@@ -47,18 +42,18 @@ export default class Input extends React.PureComponent<InputProps, InputState> {
     if (message) {
       const matches = regexp.exec(message);
       const command = matches && matches[1];
-      const restOfMessage = (matches && matches[2]) || "";
+      const restOfMessage = (matches && matches[2]) || '';
       switch (command) {
-        case "nick":
+        case 'nick':
           sendMessage({
-            type: "nickname",
+            type: 'nickname',
             payload: { nickname: restOfMessage },
           });
           break;
         default:
           sendMessage({
             payload: message,
-            type: "text",
+            type: 'text',
           });
       }
       // let image = null
@@ -76,7 +71,7 @@ export default class Input extends React.PureComponent<InputProps, InputState> {
       //   }
       // } catch (e) {}
     }
-    this.setState({ message: "" });
+    this.setState({ message: '' });
   };
   render() {
     const { message } = this.state;
@@ -91,45 +86,26 @@ export default class Input extends React.PureComponent<InputProps, InputState> {
           ref={this.textArea}
         />
         <div className="chat-controls-buttons">
-          <input
-            type="submit"
-            value="Send"
-            className="chat-controls-buttons-send"
-          />
+          <input type="submit" value="Send" className="chat-controls-buttons-send" />
 
           <div className="chat-controls-buttons-wrapper">
             <div className="emoji">
               <div className="chat-controls-buttons-smiles">
                 <span className="icon icon-sentiment_satisfied" />
                 <div className="chat-controls-buttons-smiles-menu">
-                  <div
-                    className="chat-controls-buttons-smile"
-                    onClick={this.handleSmileClick}
-                  >
+                  <div className="chat-controls-buttons-smile" onClick={this.handleSmileClick}>
                     😑
                   </div>
-                  <div
-                    className="chat-controls-buttons-smile"
-                    onClick={this.handleSmileClick}
-                  >
+                  <div className="chat-controls-buttons-smile" onClick={this.handleSmileClick}>
                     😕
                   </div>
-                  <div
-                    className="chat-controls-buttons-smile"
-                    onClick={this.handleSmileClick}
-                  >
+                  <div className="chat-controls-buttons-smile" onClick={this.handleSmileClick}>
                     😊
                   </div>
-                  <div
-                    className="chat-controls-buttons-smile"
-                    onClick={this.handleSmileClick}
-                  >
+                  <div className="chat-controls-buttons-smile" onClick={this.handleSmileClick}>
                     😎
                   </div>
-                  <div
-                    className="chat-controls-buttons-smile"
-                    onClick={this.handleSmileClick}
-                  >
+                  <div className="chat-controls-buttons-smile" onClick={this.handleSmileClick}>
                     💪
                   </div>
                 </div>

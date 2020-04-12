@@ -1,5 +1,5 @@
-@import "_fonts";
-@import "_variables";
+@import '_fonts';
+@import '_variables';
 
 *,
 *:before,
@@ -36,7 +36,7 @@ footer {
 }
 
 body.call {
-  background-image: url("../res/peer-calls.svg");
+  background-image: url('../res/peer-calls.svg');
   background-size: 200px;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -101,7 +101,7 @@ body.call {
     color: $color-primary;
   }
 
-  input[type="text"] {
+  input[type='text'] {
     font-size: 1.2rem;
     padding: 1rem 0rem 0.75rem;
     width: 100%;
@@ -120,7 +120,7 @@ body.call {
     }
   }
 
-  input[type="submit"] {
+  input[type='submit'] {
     font-family: $font-monospace;
     @include button($color-primary, $color-warning);
     font-size: 1.2rem;
@@ -163,13 +163,13 @@ body.call {
 }
 
 .app {
-  @import "_alert";
-  @import "_notification";
-  @import "_video";
-  @import "_chat";
-  @import "_media";
-  @import "_toolbar";
-  @import "_dropdown";
+  @import '_alert';
+  @import '_notification';
+  @import '_video';
+  @import '_chat';
+  @import '_media';
+  @import '_toolbar';
+  @import '_dropdown';
 }
 
 .fade-enter {

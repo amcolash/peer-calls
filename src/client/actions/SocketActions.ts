@@ -1,13 +1,13 @@
-import * as NotifyActions from "../actions/NotifyActions";
-import * as PeerActions from "../actions/PeerActions";
-import * as constants from "../constants";
-import _debug from "debug";
-import { Store, Dispatch, GetState } from "../store";
-import { ClientSocket } from "../socket";
-import { SocketEvent } from "../../shared";
-import { EventEmitter } from "events";
+import * as NotifyActions from '../actions/NotifyActions';
+import * as PeerActions from '../actions/PeerActions';
+import * as constants from '../constants';
+import _debug from 'debug';
+import { Store, Dispatch, GetState } from '../store';
+import { ClientSocket } from '../socket';
+import { SocketEvent } from '../../shared';
+import { EventEmitter } from 'events';
 
-const debug = _debug("peercalls");
+const debug = _debug('peercalls');
 
 export interface SocketHandlerOptions {
   socket: ClientSocket;
@@ -34,25 +34,22 @@ class SocketHandler {
     this.getState = options.getState;
     this.userId = options.userId;
   }
-  handleSignal = ({ userId, signal }: SocketEvent["signal"]) => {
+  handleSignal = ({ userId, signal }: SocketEvent['signal']) => {
     const { getState } = this;
     const peer = getState().peers[userId];
     // debug('socket signal, userId: %s, signal: %o', userId, signal);
-    if (!peer) return debug("user: %s, no peer found", userId);
+    if (!peer) return debug('user: %s, no peer found', userId);
     peer.signal(signal);
   };
-  handleUsers = ({ initiator, users }: SocketEvent["users"]) => {
+  handleUsers = ({ initiator, users }: SocketEvent['users']) => {
     const { socket, stream, dispatch, getState } = this;
-    debug("socket users: %o", users);
-    this.dispatch(NotifyActions.info("Connected users: {0}", users.length));
+    debug('socket users: %o', users);
+    this.dispatch(NotifyActions.info('Connected users: {0}', users.length));
     const { peers } = this.getState();
-    debug("active peers: %o", Object.keys(peers));
+    debug('active peers: %o', Object.keys(peers));
 
     users
-      .filter(
-        (user) =>
-          user.userId && !peers[user.userId] && user.userId !== this.userId
-      )
+      .filter((user) => user.userId && !peers[user.userId] && user.userId !== this.userId)
       .forEach((user) =>
         PeerActions.createPeer({
           socket,
@@ -93,7 +90,7 @@ export function handshake(options: HandshakeOptions) {
   socket.on(constants.SOCKET_EVENT_SIGNAL, handler.handleSignal);
   socket.on(constants.SOCKET_EVENT_USERS, handler.handleUsers);
 
-  debug("userId: %s", userId);
+  debug('userId: %s', userId);
   socket.emit(constants.SOCKET_EVENT_READY, {
     room: roomName,
     userId,

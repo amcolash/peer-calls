@@ -1,6 +1,4 @@
-export const createObjectURL = jest
-  .fn()
-  .mockImplementation((object) => "blob://" + String(object));
+export const createObjectURL = jest.fn().mockImplementation((object) => 'blob://' + String(object));
 export const revokeObjectURL = jest.fn();
 
 let count = 0;
@@ -53,10 +51,10 @@ export const play = jest.fn();
 
 export const valueOf = jest.fn();
 
-export const callId = "call1234";
+export const callId = 'call1234';
 
-export const userId = "user1234";
+export const userId = 'user1234';
 
-export const nickname = "nick1234";
+export const nickname = 'nick1234';
 
 export const iceServers = [];

@@ -1,6 +1,6 @@
-import React from "react";
-import { NicknameMessage } from "../actions/PeerActions";
-import { nickname } from "../window";
+import React from 'react';
+import { NicknameMessage } from '../actions/PeerActions';
+import { nickname } from '../window';
 
 export interface NicknameProps {
   value: string;
@@ -11,12 +11,7 @@ export interface NicknameProps {
 export class Nickname extends React.PureComponent<NicknameProps> {
   render() {
     if (this.props.localUser) {
-      return (
-        <MemoEditableNickname
-          value={this.props.value}
-          onChange={this.props.onChange}
-        />
-      );
+      return <MemoEditableNickname value={this.props.value} onChange={this.props.onChange} />;
     }
     return <ReadOnlyNickname value={this.props.value} />;
   }
@@ -31,11 +26,10 @@ const MemoEditableNickname = React.memo(EditableNickname);
 
 function EditableNickname(props: EditableNicknameProps) {
   const [value, setValue] = React.useState(props.value);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setValue(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
 
   function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.currentTarget.blur();
     }
   }
@@ -47,21 +41,12 @@ function EditableNickname(props: EditableNicknameProps) {
       nick = nickname;
     }
     props.onChange({
-      type: "nickname",
+      type: 'nickname',
       payload: { nickname: nick },
     });
   }
 
-  return (
-    <input
-      className="nickname"
-      type="text"
-      onChange={handleChange}
-      onKeyPress={handleKeyPress}
-      onBlur={update}
-      value={value}
-    />
-  );
+  return <input className="nickname" type="text" onChange={handleChange} onKeyPress={handleKeyPress} onBlur={update} value={value} />;
 }
 
 interface ReadOnlyNicknameProps {

@@ -1,10 +1,10 @@
-import { readFileSync } from "fs";
-import { resolve, join } from "path";
-import { Config } from "./config";
-import { createServer as createHTTPSServer } from "https";
-import { createServer as createHTTPServer, RequestListener } from "http";
+import { readFileSync } from 'fs';
+import { resolve, join } from 'path';
+import { Config } from './config';
+import { createServer as createHTTPSServer } from 'https';
+import { createServer as createHTTPServer, RequestListener } from 'http';
 
-const projectRoot = resolve(join(__dirname, "../.."));
+const projectRoot = resolve(join(__dirname, '../..'));
 
 const readFile = (file: string) => readFileSync(resolve(projectRoot, file));
 

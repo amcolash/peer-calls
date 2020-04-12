@@ -1,14 +1,14 @@
-import _debug from "debug";
-import forEach from "lodash/forEach";
-import omit from "lodash/omit";
-import Peer from "simple-peer";
-import { PeerAction } from "../actions/PeerActions";
-import * as constants from "../constants";
-import { MediaStreamAction } from "../actions/MediaActions";
-import { RemoveStreamAction, StreamType } from "../actions/StreamActions";
-import { HangUpAction } from "../actions/CallActions";
+import _debug from 'debug';
+import forEach from 'lodash/forEach';
+import omit from 'lodash/omit';
+import Peer from 'simple-peer';
+import { PeerAction } from '../actions/PeerActions';
+import * as constants from '../constants';
+import { MediaStreamAction } from '../actions/MediaActions';
+import { RemoveStreamAction, StreamType } from '../actions/StreamActions';
+import { HangUpAction } from '../actions/CallActions';
 
-const debug = _debug("peercalls");
+const debug = _debug('peercalls');
 
 export type PeersState = Record<string, Peer.Instance>;
 
@@ -19,22 +19,15 @@ let localStreams: Record<StreamType, MediaStream | undefined> = {
   desktop: undefined,
 };
 
-function removeTrackFromPeer(
-  peer: Peer.Instance,
-  track: MediaStreamTrack,
-  stream: MediaStream
-) {
+function removeTrackFromPeer(peer: Peer.Instance, track: MediaStreamTrack, stream: MediaStream) {
   try {
     peer.removeTrack(track, stream);
   } catch (err) {
-    debug("peer.removeTrack: %s", err);
+    debug('peer.removeTrack: %s', err);
   }
 }
 
-function handleRemoveStream(
-  state: PeersState,
-  action: RemoveStreamAction
-): PeersState {
+function handleRemoveStream(state: PeersState, action: RemoveStreamAction): PeersState {
   const stream = action.payload.stream;
   if (action.payload.userId === constants.ME) {
     forEach(state, (peer) => {
@@ -47,11 +40,8 @@ function handleRemoveStream(
   return state;
 }
 
-function handleMediaStream(
-  state: PeersState,
-  action: MediaStreamAction
-): PeersState {
-  if (action.status !== "resolved") {
+function handleMediaStream(state: PeersState, action: MediaStreamAction): PeersState {
+  if (action.status !== 'resolved') {
     return state;
   }
   const streamType = action.payload.type;

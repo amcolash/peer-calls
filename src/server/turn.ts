@@ -1,5 +1,5 @@
-import crypto from "crypto";
-import { ICEServer } from "./config";
+import crypto from 'crypto';
+import { ICEServer } from './config';
 
 export interface Credentials {
   username: string;
@@ -9,9 +9,9 @@ export interface Credentials {
 export function getCredentials(name: string, secret: string): Credentials {
   // this credential would be valid for the next 24 hours
   const timestamp = Math.floor(Date.now() / 1000) + 24 * 3600;
-  const username = [timestamp, name].join(":");
-  const hmac = crypto.createHmac("sha1", secret);
-  hmac.setEncoding("base64");
+  const username = [timestamp, name].join(':');
+  const hmac = crypto.createHmac('sha1', secret);
+  hmac.setEncoding('base64');
   hmac.write(username);
   hmac.end();
   const credential = hmac.read();
@@ -32,16 +32,10 @@ export function processServers(iceServers: ICEServer[]) {
     switch (server.auth) {
       case undefined:
         return server;
-      case "secret":
-        return getServerConfig(
-          server,
-          getCredentials(server.username, server.secret)
-        );
+      case 'secret':
+        return getServerConfig(server, getCredentials(server.username, server.secret));
       default:
-        throw new Error(
-          "Authentication type not implemented: " +
-            (server as { auth: string }).auth
-        );
+        throw new Error('Authentication type not implemented: ' + (server as { auth: string }).auth);
     }
   });
 }
