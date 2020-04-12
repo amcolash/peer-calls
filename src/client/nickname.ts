@@ -1,13 +1,13 @@
-import { Nicknames } from './reducers/nicknames'
-import { ME } from './constants'
+import { Nicknames } from "./reducers/nicknames";
+import { ME } from "./constants";
 
 export function getNickname(nicknames: Nicknames, userId: string): string {
-  const nickname = nicknames[userId]
+  const nickname = nicknames[userId];
   if (nickname) {
-    return nickname
+    return nickname;
   }
   if (userId === ME) {
-    return 'You'
+    return "You";
   }
-  return userId
+  return userId;
 }

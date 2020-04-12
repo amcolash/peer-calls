@@ -1,147 +1,167 @@
-import { DialAction, HangUpAction } from '../actions/CallActions'
-import { AudioConstraint, MediaAction, MediaDevice, MediaEnumerateAction, MediaPlayAction, MediaStreamAction, VideoConstraint } from '../actions/MediaActions'
-import { DIAL, DialState, DIAL_STATE_DIALLING, DIAL_STATE_HUNG_UP, DIAL_STATE_IN_CALL, HANG_UP, MEDIA_AUDIO_CONSTRAINT_SET, MEDIA_ENUMERATE, MEDIA_PLAY, MEDIA_STREAM, MEDIA_VIDEO_CONSTRAINT_SET } from '../constants'
+import { DialAction, HangUpAction } from "../actions/CallActions";
+import {
+  AudioConstraint,
+  MediaAction,
+  MediaDevice,
+  MediaEnumerateAction,
+  MediaPlayAction,
+  MediaStreamAction,
+  VideoConstraint,
+} from "../actions/MediaActions";
+import {
+  DIAL,
+  DialState,
+  DIAL_STATE_DIALLING,
+  DIAL_STATE_HUNG_UP,
+  DIAL_STATE_IN_CALL,
+  HANG_UP,
+  MEDIA_AUDIO_CONSTRAINT_SET,
+  MEDIA_ENUMERATE,
+  MEDIA_PLAY,
+  MEDIA_STREAM,
+  MEDIA_VIDEO_CONSTRAINT_SET,
+} from "../constants";
 
 export interface MediaState {
-  devices: MediaDevice[]
-  video: VideoConstraint
-  audio: AudioConstraint
-  dialState: DialState
-  loading: boolean
-  error: string
-  autoplayError: boolean
+  devices: MediaDevice[];
+  video: VideoConstraint;
+  audio: AudioConstraint;
+  dialState: DialState;
+  loading: boolean;
+  error: string;
+  autoplayError: boolean;
 }
 
 const defaultState: MediaState = {
   devices: [],
-  video: { facingMode: 'user'},
+  video: { facingMode: "user" },
   audio: true,
   dialState: DIAL_STATE_HUNG_UP,
   loading: false,
-  error: '',
+  error: "",
   autoplayError: false,
-}
+};
 
 export function handleEnumerate(
   state: MediaState,
-  action: MediaEnumerateAction,
+  action: MediaEnumerateAction
 ): MediaState {
   switch (action.status) {
-    case 'resolved':
+    case "resolved":
       return {
         ...state,
         loading: false,
         devices: action.payload,
-      }
-      case 'pending':
-        return {
-          ...state,
-          loading: true,
-        }
-      case 'rejected':
-        return {
-          ...state,
-          loading: false,
-          error: 'Could not retrieve media devices',
-        }
+      };
+    case "pending":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "rejected":
+      return {
+        ...state,
+        loading: false,
+        error: "Could not retrieve media devices",
+      };
   }
 }
 
 export function handleMediaStream(
   state: MediaState,
-  action: MediaStreamAction,
+  action: MediaStreamAction
 ): MediaState {
   switch (action.status) {
-    case 'resolved':
+    case "resolved":
       return {
         ...state,
-      }
-    case 'rejected':
+      };
+    case "rejected":
       return {
         ...state,
         error: action.payload.message,
-      }
+      };
     default:
-      return state
+      return state;
   }
 }
 
 export function handlePlay(
   state: MediaState,
-  action: MediaPlayAction,
+  action: MediaPlayAction
 ): MediaState {
   switch (action.status) {
-    case 'pending':
-    case 'resolved':
+    case "pending":
+    case "resolved":
       return {
         ...state,
         autoplayError: false,
-      }
-    case 'rejected':
-      console.log('play rejected', action.payload.name)
-      if (action.payload.name !== 'NotAllowedError') {
-        return state
+      };
+    case "rejected":
+      console.log("play rejected", action.payload.name);
+      if (action.payload.name !== "NotAllowedError") {
+        return state;
       }
       return {
         ...state,
         autoplayError: true,
-      }
+      };
     default:
-      return state
+      return state;
   }
 }
 
 export function handleDial(state: MediaState, action: DialAction): MediaState {
-  switch(action.status) {
-    case 'pending':
+  switch (action.status) {
+    case "pending":
       return {
         ...state,
         dialState: DIAL_STATE_DIALLING,
-      }
-    case 'resolved':
+      };
+    case "resolved":
       return {
         ...state,
         dialState: DIAL_STATE_IN_CALL,
-      }
-    case 'rejected':
+      };
+    case "rejected":
       return {
         ...state,
         dialState: DIAL_STATE_HUNG_UP,
-      }
+      };
     default:
-      return state
+      return state;
   }
 }
 
 export default function media(
   state = defaultState,
-  action: MediaAction | DialAction | HangUpAction,
+  action: MediaAction | DialAction | HangUpAction
 ): MediaState {
   switch (action.type) {
     case MEDIA_ENUMERATE:
-      return handleEnumerate(state, action)
+      return handleEnumerate(state, action);
     case MEDIA_AUDIO_CONSTRAINT_SET:
       return {
         ...state,
         audio: action.payload,
-      }
+      };
     case MEDIA_VIDEO_CONSTRAINT_SET:
       return {
         ...state,
         video: action.payload,
-      }
+      };
     case MEDIA_STREAM:
-      return handleMediaStream(state, action)
+      return handleMediaStream(state, action);
     case MEDIA_PLAY:
-      return handlePlay(state, action)
+      return handlePlay(state, action);
     case DIAL:
-      return handleDial(state, action)
+      return handleDial(state, action);
     case HANG_UP:
       return {
         ...state,
         dialState: DIAL_STATE_HUNG_UP,
-      }
+      };
     default:
-      return state
+      return state;
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { EventEmitter } from 'events'
+import { EventEmitter } from "events";
 
 const Peer = jest.fn().mockImplementation(() => {
   const peer = new EventEmitter();
@@ -10,9 +10,9 @@ const Peer = jest.fn().mockImplementation(() => {
   (peer as any).removeTrack = jest.fn();
   (peer as any).addStream = jest.fn();
   (peer as any).removeStream = jest.fn();
-  (Peer as any).instances.push(peer)
-  return peer
+  (Peer as any).instances.push(peer);
+  return peer;
 });
 
-(Peer as any).instances = []
-export default Peer
+(Peer as any).instances = [];
+export default Peer;

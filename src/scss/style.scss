@@ -1,5 +1,5 @@
-@import '_fonts';
-@import '_variables';
+@import "_fonts";
+@import "_variables";
 
 *,
 *:before,
@@ -11,7 +11,8 @@ html {
   height: 100%;
 }
 
-html, body {
+html,
+body {
   z-index: -99;
 }
 
@@ -35,7 +36,7 @@ footer {
 }
 
 body.call {
-  background-image: url('../res/peer-calls.svg');
+  background-image: url("../res/peer-calls.svg");
   background-size: 200px;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -131,12 +132,14 @@ body.call {
     text-align: center;
   }
 
-  :-moz-placeholder { /* Firefox 18- */
+  :-moz-placeholder {
+    /* Firefox 18- */
     color: $color-fg;
     text-align: center;
   }
 
-  ::-moz-placeholder {  /* Firefox 19+ */
+  ::-moz-placeholder {
+    /* Firefox 19+ */
     color: $color-fg;
     text-align: center;
   }
@@ -160,13 +163,13 @@ body.call {
 }
 
 .app {
-  @import '_alert';
-  @import '_notification';
-  @import '_video';
-  @import '_chat';
-  @import '_media';
-  @import '_toolbar';
-  @import '_dropdown';
+  @import "_alert";
+  @import "_notification";
+  @import "_video";
+  @import "_chat";
+  @import "_media";
+  @import "_toolbar";
+  @import "_dropdown";
 }
 
 .fade-enter {

@@ -1,20 +1,20 @@
-import { MESSAGE_ADD } from '../constants'
+import { MESSAGE_ADD } from "../constants";
 
 export interface MessageAddAction {
-  type: 'MESSAGE_ADD'
-  payload: Message
+  type: "MESSAGE_ADD";
+  payload: Message;
 }
 
 export interface Message {
-  userId: string
-  message: string
-  timestamp: string
-  image?: string
+  userId: string;
+  message: string;
+  timestamp: string;
+  image?: string;
   // Indicates whether or not the message should be counted
-  system?: boolean
+  system?: boolean;
 }
 
 export const addMessage = (message: Message): MessageAddAction => ({
   type: MESSAGE_ADD,
   payload: message,
-})
+});

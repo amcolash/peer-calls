@@ -1,2 +1,2 @@
-export * from './SocketEvent'
-export * from './TypedEmitter'
+export * from "./SocketEvent";
+export * from "./TypedEmitter";
