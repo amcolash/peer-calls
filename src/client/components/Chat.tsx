@@ -103,7 +103,7 @@ export default class Chat extends React.PureComponent<ChatProps> {
             ))
           ) : (
             <div className="chat-empty">
-              <span className="chat-empty-icon icon icon-question_answer" />
+              <span className="chat-empty-icon icon icon-forum" />
               <div className="chat-empty-message">No Notifications</div>
             </div>
           )}

@@ -129,7 +129,7 @@ export default class Toolbar extends React.PureComponent<ToolbarProps, ToolbarSt
         <ToolbarButton
           badge={unreadCount}
           className="chat"
-          icon="icon-question_answer"
+          icon="icon-forum"
           blink={!this.props.chatVisible && hasUnread}
           onClick={this.handleToggleChat}
           on={this.props.chatVisible}
