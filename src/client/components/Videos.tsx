@@ -8,12 +8,14 @@ import { Nicknames } from '../reducers/nicknames';
 import { NicknameMessage } from '../actions/PeerActions';
 import { getStreamKey, WindowStates, WindowState } from '../reducers/windowStates';
 import { MinimizeTogglePayload } from '../actions/StreamActions';
+import { Rooms } from '../reducers/rooms';
 
 export interface VideosProps {
   onChangeNickname: (message: NicknameMessage) => void;
   nicknames: Nicknames;
   play: () => void;
   peers: Record<string, unknown>;
+  rooms: Rooms;
   streams: StreamsState;
   onMinimizeToggle: (payload: MinimizeTogglePayload) => void;
   windowStates: WindowStates;
@@ -94,6 +96,7 @@ export default class Videos extends React.PureComponent<VideosProps> {
             play={this.props.play}
             nickname={getNickname(this.props.nicknames, props.userId)}
             onChangeNickname={this.props.onChangeNickname}
+            rooms={this.props.rooms}
           />
         ))}
       </div>
@@ -109,6 +112,7 @@ export default class Videos extends React.PureComponent<VideosProps> {
             play={this.props.play}
             nickname={getNickname(this.props.nicknames, props.userId)}
             onChangeNickname={this.props.onChangeNickname}
+            rooms={this.props.rooms}
           />
         ))}
       </div>

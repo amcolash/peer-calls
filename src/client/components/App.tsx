@@ -51,7 +51,7 @@ export interface AppState {
 export default class App extends React.PureComponent<AppProps, AppState> {
   state: AppState = {
     chatVisible: false,
-    roomsVisible: true,
+    roomsVisible: false,
   };
   handleShowChat = () => {
     this.setState({ chatVisible: true });
@@ -150,6 +150,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           nicknames={nicknames}
           peers={peers}
           windowStates={this.props.windowStates}
+          rooms={rooms}
         />
       </div>
     );

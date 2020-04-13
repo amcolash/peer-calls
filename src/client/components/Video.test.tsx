@@ -9,6 +9,7 @@ import { StreamWithURL } from '../reducers/streams';
 import { NicknameMessage } from '../actions/PeerActions';
 import { WindowState } from '../reducers/windowStates';
 import { MinimizeTogglePayload } from '../actions/StreamActions';
+import { Rooms } from '../reducers/rooms';
 
 describe('components/Video', () => {
   interface VideoState {
@@ -37,6 +38,7 @@ describe('components/Video', () => {
           nickname={this.props.nickname}
           onChangeNickname={this.props.onChangeNickname}
           windowState={this.props.windowState}
+          rooms={this.props.rooms}
         />
       );
     }
@@ -50,6 +52,7 @@ describe('components/Video', () => {
   let url: string;
   let wrapper: Element;
   let nickname: string;
+  let rooms: Rooms;
 
   interface Flags {
     muted: boolean;
@@ -86,6 +89,7 @@ describe('components/Video', () => {
           onMinimizeToggle={onMinimizeToggle}
           nickname={nickname}
           windowState={flags.windowState}
+          rooms={rooms}
         />,
         div
       );

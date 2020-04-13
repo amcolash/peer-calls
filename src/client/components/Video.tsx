@@ -6,6 +6,9 @@ import { Nickname } from './Nickname';
 import { Dropdown } from './Dropdown';
 import { WindowState } from '../reducers/windowStates';
 import { MinimizeTogglePayload } from '../actions/StreamActions';
+import { Rooms } from '../reducers/rooms';
+import { getRoom } from '../room';
+import { ME } from '../constants';
 
 export interface VideoProps {
   onMinimizeToggle: (payload: MinimizeTogglePayload) => void;
@@ -18,6 +21,7 @@ export interface VideoProps {
   mirrored: boolean;
   play: () => void;
   localUser?: boolean;
+  rooms: Rooms;
 }
 
 export default class Video extends React.PureComponent<VideoProps> {
@@ -34,7 +38,7 @@ export default class Video extends React.PureComponent<VideoProps> {
     this.componentDidUpdate();
   }
   componentDidUpdate() {
-    const { stream } = this.props;
+    const { stream, rooms } = this.props;
     const video = this.videoRef.current!;
     const mediaStream = (stream && stream.stream) || null;
     const url = stream && stream.url;
@@ -45,6 +49,13 @@ export default class Video extends React.PureComponent<VideoProps> {
     } else if (video.src !== url) {
       video.src = url || '';
     }
+
+    const myRoom = getRoom(rooms, ME);
+    const videoRoom = getRoom(rooms, this.props.userId);
+    if (myRoom === videoRoom) video.volume = 1;
+    else video.volume = 0.1;
+
+    console.log(`volume for ${this.props.userId} is ${video.volume}`);
   }
   handleMinimize = () => {
     this.props.onMinimizeToggle({
