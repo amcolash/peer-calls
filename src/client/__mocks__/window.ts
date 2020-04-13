@@ -57,4 +57,6 @@ export const userId = 'user1234';
 
 export const nickname = 'nick1234';
 
+export const room = 'main1234';
+
 export const iceServers = [];

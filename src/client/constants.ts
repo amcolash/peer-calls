@@ -42,6 +42,9 @@ export const PEER_EVENT_SIGNAL = 'signal';
 export const PEER_EVENT_TRACK = 'track';
 export const PEER_EVENT_DATA = 'data';
 
+export const ROOM_MAIN = 'Main';
+export const ROOM_SET = 'ROOM_SET';
+
 export const SOCKET_EVENT_READY = 'ready';
 export const SOCKET_EVENT_SIGNAL = 'signal';
 export const SOCKET_EVENT_USERS = 'users';

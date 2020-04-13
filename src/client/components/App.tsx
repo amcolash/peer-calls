@@ -10,6 +10,7 @@ import { dismissNotification, Notification } from '../actions/NotifyActions';
 import { Message as MessageType } from '../actions/PeerActions';
 import { MinimizeTogglePayload, removeStream } from '../actions/StreamActions';
 import * as constants from '../constants';
+import { Rooms } from '../reducers/rooms';
 import { Nicknames } from '../reducers/nicknames';
 import { StreamsState } from '../reducers/streams';
 import { WindowStates } from '../reducers/windowStates';
@@ -19,13 +20,14 @@ import Notifications from './Notifications';
 import { Side } from './Side';
 import Toolbar from './Toolbar';
 import Videos from './Videos';
-import Rooms from './Rooms';
+import RoomList from './RoomList';
 
 export interface AppProps {
   dialState: constants.DialState;
   dismissNotification: typeof dismissNotification;
   init: () => void;
   nicknames: Nicknames;
+  rooms: Rooms;
   notifications: Record<string, Notification>;
   messages: Message[];
   messagesCount: number;
@@ -87,6 +89,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
       notifications,
       onSendFile,
       peers,
+      rooms,
       sendMessage,
       streams,
     } = this.props;
@@ -125,7 +128,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           visible={this.state.chatVisible}
         />
 
-        <Rooms dialState={dialState} nicknames={nicknames} peers={peers} streams={streams} />
+        <RoomList dialState={dialState} nicknames={nicknames} onChangeRoom={sendMessage} rooms={rooms} />
         <Videos
           onChangeNickname={sendMessage}
           onMinimizeToggle={this.props.minimizeToggle}

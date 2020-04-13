@@ -5,6 +5,7 @@ import peers from './peers';
 import media from './media';
 import streams from './streams';
 import nicknames from './nicknames';
+import rooms from './rooms';
 import { combineReducers } from 'redux';
 
 export default combineReducers({
@@ -13,6 +14,7 @@ export default combineReducers({
   media,
   nicknames,
   peers,
+  rooms,
   streams,
   windowStates,
 });

@@ -14,6 +14,7 @@ function mapStateToProps(state: State) {
     peers: state.peers,
     notifications: state.notifications,
     nicknames: state.nicknames,
+    rooms: state.rooms,
     messages: state.messages.list,
     messagesCount: state.messages.count,
     windowStates: state.windowStates,

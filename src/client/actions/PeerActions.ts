@@ -1,17 +1,20 @@
 import * as ChatActions from './ChatActions';
 import * as NicknameActions from './NicknameActions';
+import * as RoomActions from './RoomActions';
 import * as NotifyActions from './NotifyActions';
 import * as StreamActions from './StreamActions';
 import * as constants from '../constants';
 import Peer, { SignalData } from 'simple-peer';
 import forEach from 'lodash/forEach';
 import _debug from 'debug';
-import { iceServers } from '../window';
+import { iceServers, userId } from '../window';
 import { Dispatch, GetState } from '../store';
 import { ClientSocket } from '../socket';
 import { getNickname } from '../nickname';
+import { ROOM_MAIN } from '../constants';
 
 const debug = _debug('peercalls');
+const myId = userId;
 
 export interface Peers {
   [id: string]: Peer.Instance;
@@ -73,6 +76,15 @@ class PeerHandler {
       sendData(peer, {
         payload: { nickname },
         type: 'nickname',
+      });
+    }
+
+    // When a peer connects to this client, send it back the current client room
+    const room = state.rooms[constants.ME];
+    if (room) {
+      sendData(peer, {
+        payload: { room, userId: myId },
+        type: 'room',
       });
     }
   };
@@ -141,6 +153,31 @@ class PeerHandler {
             nickname: message.payload.nickname,
           })
         );
+        break;
+      // This is a a really confusing way of handling data and sending things around (in my opinion). Whatever the case is though, I will
+      // try to explain it a little bit so I can understand in the future if needed.
+      // This case is when this client gets a payload message and needs to handle a local update
+      case 'room':
+        dispatch(
+          ChatActions.addMessage({
+            userId: constants.PEERCALLS,
+            message: 'User ' + getNickname(state.nicknames, user.id) + ' moved to room ' + (message.payload.room || ROOM_MAIN),
+            timestamp: new Date().toLocaleString(),
+            system: true,
+            image: undefined,
+          })
+        );
+
+        let userId = message.payload.userId;
+
+        // If the client got a payload with ME, then fix that id to actually make sense - since the context no longer correct. All outgoing
+        // will send ME since that is the paradigm in this codebase.
+        if (userId === constants.ME) userId = user.id;
+
+        // If the client receives a message that contains its own id, transform it back to ME locally
+        if (userId === myId) userId = constants.ME;
+
+        dispatch(RoomActions.setRoom({ userId, room: message.payload.room }));
         break;
       default:
         dispatch(
@@ -277,14 +314,22 @@ export interface NicknameMessage {
   };
 }
 
-export type Message = TextMessage | FileMessage | NicknameMessage;
+export interface RoomMessage {
+  type: 'room';
+  payload: {
+    room: string;
+    userId: string;
+  };
+}
+
+export type Message = TextMessage | FileMessage | NicknameMessage | RoomMessage;
 
 function sendData(peer: Peer.Instance, message: Message) {
   peer.send(JSON.stringify(message));
 }
 
 export const sendMessage = (message: Message) => (dispatch: Dispatch, getState: GetState) => {
-  const { peers } = getState();
+  const { nicknames, peers } = getState();
   debug('Sending message type: %s to %s peers.', message.type, Object.keys(peers).length);
   switch (message.type) {
     case 'file':
@@ -311,6 +356,27 @@ export const sendMessage = (message: Message) => (dispatch: Dispatch, getState: 
         NicknameActions.setNickname({
           userId: constants.ME,
           nickname: message.payload.nickname,
+        })
+      );
+      break;
+    // This case is where the client updates its own state and needs to send the data to other peers
+    case 'room':
+      dispatch(
+        ChatActions.addMessage({
+          userId: constants.PEERCALLS,
+          message:
+            message.payload.userId === constants.ME
+              ? 'You are now in the room: ' + message.payload.room
+              : 'User ' + getNickname(nicknames, message.payload.userId) + ' moved to room ' + (message.payload.room || ROOM_MAIN),
+          timestamp: new Date().toLocaleString(),
+          system: true,
+          image: undefined,
+        })
+      );
+      dispatch(
+        RoomActions.setRoom({
+          userId: message.payload.userId,
+          room: message.payload.room,
         })
       );
       break;

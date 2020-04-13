@@ -19,6 +19,7 @@ router.get('/:callId', (req, res) => {
     callId: encodeURIComponent(req.params.callId),
     userId: v4(),
     nickname: req.headers['x-forwarded-user'] || '',
+    room: 'Main',
     iceServers,
   });
 });

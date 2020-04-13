@@ -11,6 +11,7 @@ export const callId = valueOf('callId')!;
 export const userId = valueOf('userId')!;
 export const iceServers = JSON.parse(valueOf('iceServers')!);
 export const nickname = valueOf('nickname')!;
+export const room = valueOf('room')!;
 
 export const MediaStream = window.MediaStream;
 export const MediaStreamTrack = window.MediaStreamTrack;
