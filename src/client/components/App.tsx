@@ -51,30 +51,22 @@ export interface AppState {
 export default class App extends React.PureComponent<AppProps, AppState> {
   state: AppState = {
     chatVisible: false,
-    roomsVisible: false,
+    roomsVisible: true,
   };
   handleShowChat = () => {
-    this.setState({
-      chatVisible: true,
-    });
+    this.setState({ chatVisible: true });
   };
   handleHideChat = () => {
-    this.setState({
-      chatVisible: false,
-    });
+    this.setState({ chatVisible: false });
   };
   handleToggleChat = () => {
     return this.state.chatVisible ? this.handleHideChat() : this.handleShowChat();
   };
-  handleShowRooms = () => {
-    this.setState({
-      roomsVisible: true,
-    });
-  };
   handleHideRooms = () => {
-    this.setState({
-      roomsVisible: false,
-    });
+    this.setState({ roomsVisible: false });
+  };
+  handleShowRooms = () => {
+    this.setState({ roomsVisible: true });
   };
   handleToggleRooms = () => {
     return this.state.roomsVisible ? this.handleHideRooms() : this.handleShowRooms();
@@ -143,7 +135,13 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           visible={this.state.chatVisible}
         />
 
-        <RoomList nicknames={nicknames} onChangeRoom={sendMessage} rooms={rooms} visible={this.state.roomsVisible} />
+        <RoomList
+          nicknames={nicknames}
+          onChangeRoom={sendMessage}
+          onClose={this.handleHideRooms}
+          rooms={rooms}
+          visible={this.state.roomsVisible}
+        />
         <Videos
           onChangeNickname={sendMessage}
           onMinimizeToggle={this.props.minimizeToggle}

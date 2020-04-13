@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, Fragment } from 'react';
 import jdenticon from 'jdenticon';
 import {
   DragDropContext,
@@ -11,18 +11,18 @@ import {
   DroppableProvided,
   ResponderProvided,
 } from 'react-beautiful-dnd';
-import { DialState, DIAL_STATE_HUNG_UP } from '../constants';
 import { Nicknames } from '../reducers/nicknames';
 import { getNickname } from '../nickname';
 import { Rooms } from '../reducers/rooms';
 import { RoomMessage } from '../actions/PeerActions';
-import { ROOM_MAIN } from '../constants';
+import { ME, ROOM_MAIN } from '../constants';
 
 // Based off of the react-beautiful-dnd example: https://codesandbox.io/s/ql08j35j3q
 
 interface RoomsProps {
   nicknames: Nicknames;
   onChangeRoom: (message: RoomMessage) => void;
+  onClose: () => void;
   rooms: Rooms;
   visible: boolean;
 }
@@ -33,13 +33,17 @@ interface PersonBubble {
   icon: string;
 }
 
-const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-  // change background colour if dragging
-  background: isDragging ? '#f7f7f7' : undefined,
+const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
+  if (!isDragging) return {};
 
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
+  return {
+    // change background colour if dragging
+    background: isDragging ? '#f7f7f7' : undefined,
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  };
+};
 
 const getListStyle = (isDraggingOver: boolean): CSSProperties => ({
   background: isDraggingOver ? '#fafafa' : undefined,
@@ -79,12 +83,20 @@ export default class RoomList extends React.Component<RoomsProps, {}> {
     }
   };
 
+  createRoom = () => {
+    const roomName = window.prompt('New room name?');
+    if (roomName && roomName.length > 0) {
+      this.props.onChangeRoom({
+        type: 'room',
+        payload: { room: roomName, userId: ME },
+      });
+    }
+  };
+
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   render() {
-    if (!this.props.visible) return null;
-
-    const { nicknames, rooms } = this.props;
+    const { nicknames, onClose, rooms, visible } = this.props;
 
     const roomMap: { [room: string]: string[] } = {};
     Object.keys(rooms).forEach((userId) => {
@@ -99,7 +111,6 @@ export default class RoomList extends React.Component<RoomsProps, {}> {
     });
 
     if (!roomMap[ROOM_MAIN]) roomMap[ROOM_MAIN] = [];
-    if (!roomMap['testing']) roomMap['testing'] = [];
 
     // Sort users in each room by nickname
     Object.keys(roomMap).forEach((k) => {
@@ -120,40 +131,52 @@ export default class RoomList extends React.Component<RoomsProps, {}> {
     });
 
     return (
-      <div className="rooms">
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          {sortedRooms.map((room: string) => (
-            <div className="room" key={room}>
-              <div className="roomTitle">{room}</div>
-              <Droppable droppableId={room} key={room}>
-                {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                  <div className="roomList" ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                    {roomMap[room].map((userId, index) => {
-                      const item = generatePersonBubble(userId, nicknames);
+      <div className={`roomList ${visible ? 'visible' : 'hidden'}`}>
+        <div className="header">
+          <div className="close icon-arrow_back" onClick={() => onClose()}></div>
+          <div className="title">Room List</div>
+        </div>
 
-                      return (
-                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                          {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div
-                              className="roomPeer"
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                            >
-                              {item.content}
-                              <img src={`data:image/svg+xml;base64,${item.icon}`} />
-                            </div>
-                          )}
-                        </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <div className="rooms">
+            {sortedRooms.map((room: string) => (
+              <div className="room" key={room}>
+                <div className="roomTitle">{room}</div>
+                <Droppable droppableId={room} key={room}>
+                  {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                    <div className="roomPeers" ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                      {roomMap[room].map((userId, index) => {
+                        const item = generatePersonBubble(userId, nicknames);
+
+                        return (
+                          <Draggable key={item.id} draggableId={item.id} index={index}>
+                            {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                              <div
+                                className="roomPeer"
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                              >
+                                {item.content}
+                                <img src={`data:image/svg+xml;base64,${item.icon}`} />
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            ))}
+
+            {/* TODO: Make it droppable instead of click? */}
+            <div className="addButton" onClick={this.createRoom}>
+              <span className="icon-add"></span>
             </div>
-          ))}
+          </div>
         </DragDropContext>
       </div>
     );
