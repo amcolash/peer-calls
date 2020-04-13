@@ -12,18 +12,22 @@ import {
   DroppableProvided,
 } from 'react-beautiful-dnd';
 import update from 'immutability-helper';
-import { DialState, DIAL_STATE_IN_CALL } from '../constants';
-import { StreamsState } from '../reducers/streams';
+import { DialState, DIAL_STATE_HUNG_UP, ME } from '../constants';
+import { StreamsState, UserStreams, StreamWithURL } from '../reducers/streams';
 import Peer from 'simple-peer';
+import { Nicknames } from '../reducers/nicknames';
+import { getNickname } from '../nickname';
 
 // Based off of the react-beautiful-dnd example: https://codesandbox.io/s/ql08j35j3q
 
 interface RoomsProps {
   dialState: DialState;
+  nicknames: Nicknames;
   peers: Record<string, Peer.Instance>;
   streams: StreamsState;
 }
 
+// Long term, this should not be state but instead props passed in
 interface RoomsState {
   items: { [roomName: string]: PersonBubble[] };
 }
@@ -33,25 +37,6 @@ interface PersonBubble {
   content: string;
   icon: string;
 }
-
-// fake data generator
-const getItems = (count: number, offset: number = 0): PersonBubble[] => {
-  const items = [];
-
-  for (let i = 0; i < count; i++) {
-    const index = i + offset;
-    const rawSvg = jdenticon.toSvg(index, 50);
-    const svg = btoa(unescape(encodeURIComponent(rawSvg)));
-
-    items.push({
-      id: `item-${index}`,
-      content: `person ${index}`,
-      icon: svg,
-    });
-  }
-
-  return items;
-};
 
 // // a little function to help us with reordering the result
 const reorder = (list: PersonBubble[], startIndex: number, endIndex: number): PersonBubble[] => {
@@ -94,17 +79,43 @@ const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
 
 const getListStyle = (isDraggingOver: boolean): CSSProperties => ({
   background: isDraggingOver ? '#fafafa' : undefined,
-  outline: isDraggingOver ? '2px solid #ddd' : undefined,
+  border: isDraggingOver ? '2px solid #ddd' : undefined,
 });
 
-export default class Rooms extends React.Component<RoomsProps, RoomsState> {
-  state: RoomsState = {
+const generatePersonBubbles = (nicknames: Nicknames, streams: StreamsState): RoomsState => {
+  const state: RoomsState = {
     items: {
-      main: getItems(5),
-      sidebar: getItems(2, 5),
+      main: [],
+      parking_lot: [],
       empty: [],
     },
   };
+
+  // Go through each stream and make a PersonBubble
+  if (streams) {
+    Object.keys(streams).forEach((k) => {
+      const stream = streams[k];
+      const nickname = getNickname(nicknames, stream.userId);
+
+      const rawSvg = jdenticon.toSvg(nickname, 50);
+      const svg = btoa(unescape(encodeURIComponent(rawSvg)));
+
+      // For now, add everything to main room
+      state.items.main.push({
+        id: `item-${nickname}`,
+        content: `${nickname}`,
+        icon: svg,
+      });
+    });
+  }
+
+  return state;
+};
+
+export default class Rooms extends React.Component<RoomsProps, RoomsState> {
+  componentWillReceiveProps(nextProps: RoomsProps) {
+    this.setState({ ...generatePersonBubbles(nextProps.nicknames, nextProps.streams) });
+  }
 
   onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -142,13 +153,13 @@ export default class Rooms extends React.Component<RoomsProps, RoomsState> {
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   render() {
-    if (this.props.dialState === 'hung-up') return null;
+    if (this.props.dialState === DIAL_STATE_HUNG_UP) return null;
 
     return (
       <div className="rooms">
         <DragDropContext onDragEnd={this.onDragEnd}>
           {Object.keys(this.state.items).map((k: string) => (
-            <div className="room">
+            <div className="room" key={k}>
               <div className="roomTitle">{k}</div>
               <Droppable droppableId={k} key={`col${k}`}>
                 {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
@@ -163,7 +174,7 @@ export default class Rooms extends React.Component<RoomsProps, RoomsState> {
                             {...provided.dragHandleProps}
                             style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           >
-                            {/* {item.content} */}
+                            {item.content}
                             <img src={`data:image/svg+xml;base64,${item.icon}`} />
                           </div>
                         )}

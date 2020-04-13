@@ -16,19 +16,24 @@
     }
 
     .roomList {
-      outline: 1px solid #ddd;
+      border: 2px solid #e5e5e5;
       transition: all 0.5s;
       border-radius: 2px;
       margin-top: $grid;
       padding: $grid;
+      width: 100px;
+      min-height: 60px;
 
       .roomPeer {
-        display: flex;
         user-select: none;
-        padding: #{$grid / 4};
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: #{$grid / 2};
         margin: 0 0 $grid 0;
         border-radius: 3px;
         border: 1px solid #ccc;
+        background: #f2f2f2;
       }
     }
   }

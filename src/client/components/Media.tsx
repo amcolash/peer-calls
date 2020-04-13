@@ -57,9 +57,16 @@ const mapDispatchToProps = {
 
 const c = connect(mapStateToProps, mapDispatchToProps);
 
+// TODO: Remove this
+const NO_VIDEO = true;
+
 export class MediaForm extends React.PureComponent<MediaProps> {
   componentDidMount() {
     this.props.enumerateDevices();
+
+    if (NO_VIDEO) {
+      this.props.onSetVideoConstraint(false as VideoConstraint);
+    }
   }
   handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -100,8 +107,13 @@ export class MediaForm extends React.PureComponent<MediaProps> {
       return null;
     }
 
-    const videoId = JSON.stringify(props.video);
+    // TODO: back to const when flag removed
+    let videoId = JSON.stringify(props.video);
     const audioId = JSON.stringify(props.audio);
+
+    if (NO_VIDEO) {
+      videoId = 'false';
+    }
 
     return (
       <form className="media" onSubmit={this.handleSubmit}>

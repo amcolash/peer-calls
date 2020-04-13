@@ -81,10 +81,10 @@ export default class App extends React.PureComponent<AppProps, AppState> {
     const {
       dialState,
       dismissNotification,
-      notifications,
-      nicknames,
       messages,
       messagesCount,
+      nicknames,
+      notifications,
       onSendFile,
       peers,
       sendMessage,
@@ -125,13 +125,13 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           visible={this.state.chatVisible}
         />
 
-        <Rooms dialState={dialState} peers={peers} streams={streams} />
+        <Rooms dialState={dialState} nicknames={nicknames} peers={peers} streams={streams} />
         <Videos
           onChangeNickname={sendMessage}
           onMinimizeToggle={this.props.minimizeToggle}
           streams={streams}
           play={this.props.play}
-          nicknames={this.props.nicknames}
+          nicknames={nicknames}
           peers={peers}
           windowStates={this.props.windowStates}
         />
