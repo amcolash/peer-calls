@@ -58,7 +58,7 @@ const mapDispatchToProps = {
 const c = connect(mapStateToProps, mapDispatchToProps);
 
 // TODO: Remove this
-const NO_VIDEO = true;
+const NO_VIDEO = false;
 
 export class MediaForm extends React.PureComponent<MediaProps> {
   componentDidMount() {
