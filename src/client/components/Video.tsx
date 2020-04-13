@@ -53,9 +53,9 @@ export default class Video extends React.PureComponent<VideoProps> {
     const myRoom = getRoom(rooms, ME);
     const videoRoom = getRoom(rooms, this.props.userId);
     if (myRoom === videoRoom) video.volume = 1;
-    else video.volume = 0.1;
+    else video.volume = 0.01;
 
-    console.log(`volume for ${this.props.userId} is ${video.volume}`);
+    console.log(`volume for ${this.props.nickname} (${this.props.userId}) changed to ${video.volume}`);
   }
   handleMinimize = () => {
     this.props.onMinimizeToggle({
