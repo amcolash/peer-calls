@@ -19,6 +19,7 @@ import Notifications from './Notifications';
 import { Side } from './Side';
 import Toolbar from './Toolbar';
 import Videos from './Videos';
+import Rooms from './Rooms';
 
 export interface AppProps {
   dialState: constants.DialState;
@@ -77,7 +78,18 @@ export default class App extends React.PureComponent<AppProps, AppState> {
     return ls ? keyBy(ls.streams, 'type') : {};
   }
   render() {
-    const { dismissNotification, notifications, nicknames, messages, messagesCount, onSendFile, sendMessage } = this.props;
+    const {
+      dialState,
+      dismissNotification,
+      notifications,
+      nicknames,
+      messages,
+      messagesCount,
+      onSendFile,
+      peers,
+      sendMessage,
+      streams,
+    } = this.props;
 
     const chatVisibleClassName = classnames({
       'chat-visible': this.state.chatVisible,
@@ -113,13 +125,14 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           visible={this.state.chatVisible}
         />
 
+        <Rooms dialState={dialState} peers={peers} streams={streams} />
         <Videos
           onChangeNickname={sendMessage}
           onMinimizeToggle={this.props.minimizeToggle}
-          streams={this.props.streams}
+          streams={streams}
           play={this.props.play}
           nicknames={this.props.nicknames}
-          peers={this.props.peers}
+          peers={peers}
           windowStates={this.props.windowStates}
         />
       </div>

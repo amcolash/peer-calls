@@ -65,8 +65,6 @@ export default class Video extends React.PureComponent<VideoProps> {
       mirrored,
     });
 
-    console.log(muted);
-
     return (
       <div className={className}>
         <video
