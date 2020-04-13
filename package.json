@@ -13,7 +13,7 @@
     "start:server": "nodemon -e ts,tsx --ignore src/client -x ts-node src/index.ts",
     "start:watch": "chastifol [ npm run js:watch ] [ npm run css:watch ] [ npm run start:server ]",
     "prepublishOnly": "npm run build",
-    "build": "rpm run prettier && npm run css && npm run ts && npm run js && npm run js:uglify",
+    "build": "npm run prettier && npm run css && npm run ts && npm run js && npm run js:uglify",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
