@@ -45,11 +45,13 @@ export interface AppProps {
 
 export interface AppState {
   chatVisible: boolean;
+  roomsVisible: boolean;
 }
 
 export default class App extends React.PureComponent<AppProps, AppState> {
   state: AppState = {
     chatVisible: false,
+    roomsVisible: false,
   };
   handleShowChat = () => {
     this.setState({
@@ -63,6 +65,19 @@ export default class App extends React.PureComponent<AppProps, AppState> {
   };
   handleToggleChat = () => {
     return this.state.chatVisible ? this.handleHideChat() : this.handleShowChat();
+  };
+  handleShowRooms = () => {
+    this.setState({
+      roomsVisible: true,
+    });
+  };
+  handleHideRooms = () => {
+    this.setState({
+      roomsVisible: false,
+    });
+  };
+  handleToggleRooms = () => {
+    return this.state.roomsVisible ? this.handleHideRooms() : this.handleShowRooms();
   };
   componentDidMount() {
     const { init } = this.props;
@@ -81,7 +96,6 @@ export default class App extends React.PureComponent<AppProps, AppState> {
   }
   render() {
     const {
-      dialState,
       dismissNotification,
       messages,
       messagesCount,
@@ -108,6 +122,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
             dialState={this.props.dialState}
             messagesCount={messagesCount}
             onToggleChat={this.handleToggleChat}
+            onToggleRooms={this.handleToggleRooms}
             onSendFile={onSendFile}
             onHangup={this.onHangup}
             stream={localStreams[constants.STREAM_TYPE_CAMERA]}
@@ -128,7 +143,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
           visible={this.state.chatVisible}
         />
 
-        <RoomList dialState={dialState} nicknames={nicknames} onChangeRoom={sendMessage} rooms={rooms} />
+        <RoomList nicknames={nicknames} onChangeRoom={sendMessage} rooms={rooms} visible={this.state.roomsVisible} />
         <Videos
           onChangeNickname={sendMessage}
           onMinimizeToggle={this.props.minimizeToggle}

@@ -25,6 +25,7 @@ describe('components/Toolbar', () => {
           chatVisible={this.props.chatVisible}
           dialState={this.props.dialState}
           onToggleChat={this.props.onToggleChat}
+          onToggleRooms={this.props.onToggleRooms}
           onHangup={this.props.onHangup}
           onGetDesktopStream={this.props.onGetDesktopStream}
           onRemoveStream={this.props.onRemoveStream}
@@ -41,6 +42,7 @@ describe('components/Toolbar', () => {
   let mediaStream: MediaStream;
   let url: string;
   let onToggleChat: jest.Mock<() => void>;
+  let onToggleRooms: jest.Mock<() => void>;
   let onSendFile: jest.Mock<(file: File) => void>;
   let onHangup: jest.Mock<() => void>;
   let onGetDesktopStream: jest.MockedFunction<typeof getDesktopStream>;
@@ -51,6 +53,7 @@ describe('components/Toolbar', () => {
     dialState = DIAL_STATE_IN_CALL;
     mediaStream = new MediaStream();
     onToggleChat = jest.fn();
+    onToggleRooms = jest.fn();
     onSendFile = jest.fn();
     onHangup = jest.fn();
     onGetDesktopStream = jest.fn().mockImplementation(() => Promise.resolve());
@@ -69,6 +72,7 @@ describe('components/Toolbar', () => {
           chatVisible
           onHangup={onHangup}
           onToggleChat={onToggleChat}
+          onToggleRooms={onToggleRooms}
           onSendFile={onSendFile}
           messagesCount={1}
           stream={stream}
@@ -92,6 +96,15 @@ describe('components/Toolbar', () => {
       const button = node.querySelector('.chat')!;
       TestUtils.Simulate.click(button);
       expect(onToggleChat.mock.calls.length).toBe(1);
+    });
+  });
+
+  describe('handleRoomClick', () => {
+    it('toggle rooms', () => {
+      expect(onToggleRooms.mock.calls.length).toBe(0);
+      const button = node.querySelector('.room-toggle')!;
+      TestUtils.Simulate.click(button);
+      expect(onToggleRooms.mock.calls.length).toBe(1);
     });
   });
 

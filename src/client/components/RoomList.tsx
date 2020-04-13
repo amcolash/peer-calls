@@ -21,10 +21,10 @@ import { ROOM_MAIN } from '../constants';
 // Based off of the react-beautiful-dnd example: https://codesandbox.io/s/ql08j35j3q
 
 interface RoomsProps {
-  dialState: DialState;
   nicknames: Nicknames;
   onChangeRoom: (message: RoomMessage) => void;
   rooms: Rooms;
+  visible: boolean;
 }
 
 interface PersonBubble {
@@ -82,7 +82,7 @@ export default class RoomList extends React.Component<RoomsProps, {}> {
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   render() {
-    if (this.props.dialState === DIAL_STATE_HUNG_UP) return null;
+    if (!this.props.visible) return null;
 
     const { nicknames, rooms } = this.props;
 

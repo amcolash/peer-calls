@@ -16,6 +16,7 @@ export interface ToolbarProps {
   stream: StreamWithURL;
   desktopStream: StreamWithURL | undefined;
   onToggleChat: () => void;
+  onToggleRooms: () => void;
   onGetDesktopStream: typeof getDesktopStream;
   onRemoveStream: typeof removeStream;
   onSendFile: (file: File) => void;
@@ -110,6 +111,9 @@ export default class Toolbar extends React.PureComponent<ToolbarProps, ToolbarSt
     });
     this.props.onToggleChat();
   };
+  handleToggleRooms = () => {
+    this.props.onToggleRooms();
+  };
   handleToggleShareDesktop = () => {
     if (this.props.desktopStream) {
       this.props.onRemoveStream(ME, this.props.desktopStream.stream);
@@ -118,13 +122,17 @@ export default class Toolbar extends React.PureComponent<ToolbarProps, ToolbarSt
     }
   };
   render() {
-    const { messagesCount, stream } = this.props;
+    const { messagesCount, stream, onToggleRooms } = this.props;
     const unreadCount = messagesCount - this.state.readMessages;
     const hasUnread = unreadCount > 0;
 
     return (
       <div className="toolbar active">
         <input style={hidden} type="file" multiple ref={this.file} onChange={this.handleSelectFiles} />
+
+        {this.props.dialState === DIAL_STATE_IN_CALL && (
+          <ToolbarButton className="room-toggle" icon="icon-view_compact" onClick={this.handleToggleRooms} title="Toggle Room View" />
+        )}
 
         <ToolbarButton
           badge={unreadCount}
